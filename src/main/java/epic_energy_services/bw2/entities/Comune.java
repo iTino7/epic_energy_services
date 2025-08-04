@@ -7,18 +7,19 @@ public class Comune {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private String codice;
-    private String nome;
+    private String codiceProvincia;
+    private String codiceComune;
+    private String denominazione;
     @ManyToOne
     private Provincia provincia;
 
     public Comune() {
     }
 
-    public Comune(String codice, String nome, Provincia provincia) {
-        this.codice = codice;
-        this.nome = nome;
+    public Comune(String codiceProvincia, String codiceComune, String denominazione, Provincia provincia) {
+        this.codiceProvincia = codiceProvincia;
+        this.codiceComune = codiceComune;
+        this.denominazione = denominazione;
         this.provincia = provincia;
     }
 
@@ -26,20 +27,28 @@ public class Comune {
         return id;
     }
 
-    public String getCodice() {
-        return codice;
+    public String getCodiceProvincia() {
+        return codiceProvincia;
     }
 
-    public void setCodice(String codice) {
-        this.codice = codice;
+    public void setCodiceProvincia(String codiceProvincia) {
+        this.codiceProvincia = codiceProvincia;
     }
 
-    public String getNome() {
-        return nome;
+    public String getCodiceComune() {
+        return codiceComune;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setCodiceComune(String codiceComune) {
+        this.codiceComune = codiceComune;
+    }
+
+    public String getDenominazione() {
+        return denominazione;
+    }
+
+    public void setDenominazione(String denominazione) {
+        this.denominazione = denominazione;
     }
 
     public Provincia getProvincia() {

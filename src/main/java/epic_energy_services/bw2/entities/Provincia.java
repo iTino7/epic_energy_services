@@ -1,34 +1,26 @@
 package epic_energy_services.bw2.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Provincia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
-    @Column
     private String sigla;
+    private String provincia;
+    private String regione;
 
-    private Provincia() {
-    }
-
-    public Provincia(String nome, String sigla) {
-        this.nome = nome;
+    public Provincia(String sigla, String provincia, String regione) {
         this.sigla = sigla;
+        this.provincia = provincia;
+        this.regione = regione;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
+    public Provincia() {
     }
 
     public String getSigla() {
@@ -37,5 +29,21 @@ public class Provincia {
 
     public void setSigla(String sigla) {
         this.sigla = sigla;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    public String getRegione() {
+        return regione;
+    }
+
+    public void setRegione(String regione) {
+        this.regione = regione;
     }
 }
