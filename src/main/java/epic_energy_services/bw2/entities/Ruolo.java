@@ -19,4 +19,12 @@ public class Ruolo {
 
     @ManyToMany(mappedBy = "ruoli")
     private Set<Utenti> utenti = new HashSet<>();
+
+    public void setNomeRuolo(String nomeRuolo) {
+        this.nomeRuolo = nomeRuolo;
+    }
+
+    public void setUtenti(Set<Utenti> utenti) {
+        this.utenti = utenti;
+    }
 }

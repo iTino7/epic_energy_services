@@ -1,7 +1,6 @@
 package epic_energy_services.bw2.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,6 @@ import java.util.Set;
 @Table(name = "utenti")
 @Getter
 @Setter
-@AllArgsConstructor
 public class Utenti {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +30,16 @@ public class Utenti {
             inverseJoinColumns = @JoinColumn(name = "id_ruolo")
     )
     private Set<Ruolo> ruoli = new HashSet<>();
+
+    public Utenti(String username, String email, String password, String nome, String cognome, String avatar, Set<String> ruoli) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.avatar = avatar;
+        this.ruoli = ruoli;
+    }
+
+
 }
