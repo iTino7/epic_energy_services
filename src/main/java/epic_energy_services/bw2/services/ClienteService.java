@@ -28,6 +28,8 @@ public class ClienteService {
         cliente.setRagioneSociale(dto.getRagioneSociale());
         cliente.setPartitaIva(dto.getPartitaIva());
         cliente.setEmail(dto.getEmail());
+        cliente.setDataInserimento(dto.getDataInserimento());
+        cliente.setDataUltimoContratto(dto.getDataUltimoContratto());
         cliente.setFatturatoAnnuale(dto.getFatturatoAnnuale());
         cliente.setPec(dto.getPec());
         cliente.setTelefono(dto.getTelefono());
@@ -39,11 +41,13 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public Cliente updateClient(Long id, Cliente update) {
+    public Cliente updateClient(Long id, NewClienteDTO update) {
         Cliente cliente = this.findById(id);
         cliente.setRagioneSociale(update.getRagioneSociale());
         cliente.setPartitaIva(update.getPartitaIva());
         cliente.setEmail(update.getEmail());
+        cliente.setDataInserimento(update.getDataInserimento());
+        cliente.setDataUltimoContratto(update.getDataUltimoContratto());
         cliente.setFatturatoAnnuale(update.getFatturatoAnnuale());
         cliente.setPec(update.getPec());
         cliente.setTelefono(update.getTelefono());
