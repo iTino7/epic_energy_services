@@ -18,5 +18,5 @@ public class Ruolo {
     private String nomeRuolo;
 
     @ManyToMany(mappedBy = "ruoli")
-    private Set<Utenti> utenti = new HashSet<>();
+    private Set<User> utenti = new HashSet<>();
 }
