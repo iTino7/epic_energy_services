@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.payloads;
 
+import epic_energy_services.bw2.entities.Ruolo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -22,4 +23,4 @@ public record NewUtentiDTO(
         String lastName,
         String avatar,
 
-        Set<String> ruoli ) {}
+        Set<Ruolo> ruoli ) {}
