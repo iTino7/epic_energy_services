@@ -1,9 +1,12 @@
 package epic_energy_services.bw2.payloads;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDate;
 
 public class NewClienteDTO {
     @NotBlank(message = "Ragione sociale è obbligatoria!")
@@ -14,6 +17,12 @@ public class NewClienteDTO {
     @NotBlank(message = "L'email è obbligatoria!")
     @Email
     String email;
+    @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
+    @NotBlank(message = "La data di inserimento è obbligatoria!")
+    LocalDate dataInserimento;
+    @JsonFormat(pattern = "dd/MM/yyyy", shape = JsonFormat.Shape.STRING)
+    @NotBlank(message = "La data dell'ultimo contratto è obbligatoria!")
+    LocalDate dataUltimoContratto;
     @NotNull(message = "Il fatturato annuale è obbligatorio!")
     double fatturatoAnnuale;
     @NotBlank(message = "La pec è obbligatoria!")
@@ -31,16 +40,18 @@ public class NewClienteDTO {
     //String logoAziendale
 
 
-    public NewClienteDTO(String ragioneSociale, int partitaIva, String email, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String telefonoContatto, String cognomeContatto) {
+    public NewClienteDTO(String ragioneSociale, String email, int partitaIva, LocalDate dataInserimento, LocalDate dataUltimoContratto, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String cognomeContatto, String telefonoContatto) {
         this.ragioneSociale = ragioneSociale;
-        this.partitaIva = partitaIva;
         this.email = email;
+        this.partitaIva = partitaIva;
+        this.dataInserimento = dataInserimento;
+        this.dataUltimoContratto = dataUltimoContratto;
         this.fatturatoAnnuale = fatturatoAnnuale;
         this.pec = pec;
         this.telefono = telefono;
         this.emailContatto = emailContatto;
-        this.telefonoContatto = telefonoContatto;
         this.cognomeContatto = cognomeContatto;
+        this.telefonoContatto = telefonoContatto;
     }
 
     public String getRagioneSociale() {
@@ -65,6 +76,22 @@ public class NewClienteDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDate getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(LocalDate dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public LocalDate getDataUltimoContratto() {
+        return dataUltimoContratto;
+    }
+
+    public void setDataUltimoContratto(LocalDate dataUltimoContratto) {
+        this.dataUltimoContratto = dataUltimoContratto;
     }
 
     public double getFatturatoAnnuale() {
