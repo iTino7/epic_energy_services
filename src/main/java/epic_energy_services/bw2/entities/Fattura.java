@@ -16,6 +16,11 @@ public class Fattura {
     private LocalDate data;
     private double importo;
     private int numero;
+
+    @ManyToOne
+    @JoinColumn(name = "stato_id")
+    private StatoFattura statoFattura;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
