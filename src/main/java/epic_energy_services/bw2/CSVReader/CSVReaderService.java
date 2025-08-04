@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class CSVReaderService {
@@ -86,8 +87,7 @@ public class CSVReaderService {
                 String denominazione = columns[2];
                 String provincia = columns[3];
 
-
-                Comune comuneNew = new Comune(codiceProvincia, String.valueOf(codiceComune), denominazione, this.provinciaRepository.findByProvincia(provincia));
+                Comune comuneNew = new Comune(codiceProvincia, String.format("%03d", codiceComune) , denominazione, this.provinciaRepository.findByProvincia(provincia));
                 this.comuneRepository.save(comuneNew);
 
             }
