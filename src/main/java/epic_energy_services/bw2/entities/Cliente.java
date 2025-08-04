@@ -3,6 +3,7 @@ package epic_energy_services.bw2.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -26,6 +27,8 @@ public class Cliente {
     private String cognomeContatto;
     private String telefonoContatto;
     private String logoAziendale;
+    @OneToMany
+    private List<Indirizzo> indirizzi;
 
     public Cliente() {
     }
@@ -44,6 +47,14 @@ public class Cliente {
         this.cognomeContatto = cognomeContatto;
         this.telefonoContatto = telefonoContatto;
         this.logoAziendale = logoAziendale;
+    }
+
+    public List<Indirizzo> getIndirizzi() {
+        return indirizzi;
+    }
+
+    public void setIndirizzi(List<Indirizzo> indirizzi) {
+        this.indirizzi = indirizzi;
     }
 
     public long getId() {

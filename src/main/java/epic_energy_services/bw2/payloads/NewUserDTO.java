@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 
-public record NewUtentiDTO(
+public record NewUserDTO(
         @NotBlank
         String username,
 
