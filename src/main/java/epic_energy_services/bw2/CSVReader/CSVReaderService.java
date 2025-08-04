@@ -21,8 +21,6 @@ public class CSVReaderService {
     @Autowired
     private ComuneRepository comuneRepository;
 
-
-
     public void readCSVAndSaveProvinceInDB(String path) {
         String filePath = new File(path).getAbsolutePath();
         boolean isFirstLine = true;
@@ -49,5 +47,53 @@ public class CSVReaderService {
             e.printStackTrace();
         }
     }
-    
+
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+        return true;
+    }
+
+    public void readCSVAndSaveComuniInDB(String path) {
+        String filePath = new File(path).getAbsolutePath();
+        boolean isFirstLine = true;
+        int counter = 1;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                String[] columns = line.split(";");
+                String codiceProvincia = columns[0];
+
+                int codiceComune = 0;
+                if (isNumeric(String.valueOf(columns[1]))) {
+                    codiceComune = Integer.parseInt(columns[1]);
+                } else {
+                    codiceComune = counter++;
+                }
+
+                String denominazione = columns[2];
+                String provincia = columns[3];
+
+
+                Comune comuneNew = new Comune(codiceProvincia, String.valueOf(codiceComune), denominazione, this.provinciaRepository.findByProvincia(provincia));
+                this.comuneRepository.save(comuneNew);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
