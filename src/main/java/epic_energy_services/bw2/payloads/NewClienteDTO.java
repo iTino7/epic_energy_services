@@ -14,6 +14,8 @@ public class NewClienteDTO {
     @NotBlank(message = "L'email è obbligatoria!")
     @Email
     String email;
+    @NotNull(message = "Il fatturato annuale è obbligatorio!")
+    double fatturatoAnnuale;
     @NotBlank(message = "La pec è obbligatoria!")
     @Email
     String pec;
@@ -29,10 +31,11 @@ public class NewClienteDTO {
     //String logoAziendale
 
 
-    public NewClienteDTO(String ragioneSociale, int partitaIva, String email, String pec, String telefono, String emailContatto, String telefonoContatto, String cognomeContatto) {
+    public NewClienteDTO(String ragioneSociale, int partitaIva, String email, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String telefonoContatto, String cognomeContatto) {
         this.ragioneSociale = ragioneSociale;
         this.partitaIva = partitaIva;
         this.email = email;
+        this.fatturatoAnnuale = fatturatoAnnuale;
         this.pec = pec;
         this.telefono = telefono;
         this.emailContatto = emailContatto;
@@ -62,6 +65,14 @@ public class NewClienteDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public double getFatturatoAnnuale() {
+        return fatturatoAnnuale;
+    }
+
+    public void setFatturatoAnnuale(double fatturatoAnnuale) {
+        this.fatturatoAnnuale = fatturatoAnnuale;
     }
 
     public String getTelefono() {
