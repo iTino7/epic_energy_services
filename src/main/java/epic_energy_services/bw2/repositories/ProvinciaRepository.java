@@ -1,4 +1,4 @@
-package epic_energy_services.bw2.repository;
+package epic_energy_services.bw2.repositories;
 
 import epic_energy_services.bw2.entities.Provincia;
 import org.springframework.data.jpa.repository.JpaRepository;

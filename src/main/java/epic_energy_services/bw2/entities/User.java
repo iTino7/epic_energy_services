@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "utenti")
 @Getter
 @Setter
-public class Utenti {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,7 @@ public class Utenti {
     )
     private Set<Ruolo> ruoli = new HashSet<>();
 
-    public Utenti(String username, String email, String password, String nome, String cognome, String avatar, Set<Ruolo> ruoli) {
+    public User(String username, String email, String password, String nome, String cognome, String avatar, Set<Ruolo> ruoli) {
         this.username = username;
         this.email = email;
         this.password = password;

@@ -2,8 +2,8 @@ package epic_energy_services.bw2.CSVReader;
 
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.Provincia;
-import epic_energy_services.bw2.repository.ComuneRepository;
-import epic_energy_services.bw2.repository.ProvinciaRepository;
+import epic_energy_services.bw2.repositories.ComuneRepository;
+import epic_energy_services.bw2.repositories.ProvinciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 @Service
 public class CSVReaderService {
