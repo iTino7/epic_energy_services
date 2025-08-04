@@ -10,6 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Service
 @Slf4j
@@ -61,6 +65,11 @@ public class UserService {
     public void findByIdAndDelete(Long userId) {
         User found = this.findById(userId);
         this.userRepository.delete(found);
+    }
+    public Page<User> findAll(int pageNumber, int pageSize, String sortBy) {
+        if (pageSize > 50) pageSize = 50;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
+        return this.userRepository.findAll(pageable);
     }
 
     public User findByEmail(String email) {
