@@ -41,6 +41,6 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorsDTO handleServerError(Exception ex) {
         ex.printStackTrace();
-        return new ErrorsDTO("Generic error! We're already on it!", LocalDateTime.now());
+        return new ErrorsDTO("Errore generico! Stiamo sistemando il problema!", LocalDateTime.now());
     }
 }

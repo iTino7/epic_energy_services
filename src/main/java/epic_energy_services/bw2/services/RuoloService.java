@@ -27,8 +27,7 @@ public class RuoloService {
             throw new RuntimeException("Il ruolo '" + dto.nomeRuolo() + "' esiste già");
         }
 
-        Ruolo ruolo = new Ruolo();
-        ruolo.setNomeRuolo(dto.nomeRuolo().toUpperCase());
+        Ruolo ruolo = new Ruolo(dto.nomeRuolo().toUpperCase());
         return ruoloRepository.save(ruolo);
     }
 }

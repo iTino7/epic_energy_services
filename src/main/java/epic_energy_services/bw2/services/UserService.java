@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.services;
 
+import epic_energy_services.bw2.entities.Ruolo;
 import epic_energy_services.bw2.entities.User;
 import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.exception.NotFoundException;
@@ -30,8 +31,10 @@ public class UserService {
         this.userRepository.findByEmail(payload.email()).ifPresent(utenti -> {
             throw new BadRequestException("L'email " + utenti.getEmail() +  "è già in uso");
         });
-        User newUtente = new User(payload.username(), payload.email(), bcrypt.encode(payload.password()), payload.firstName(), payload.lastName(), payload.avatar(), payload.ruoli());
+        Ruolo newRuolo = new Ruolo("USER");
+        User newUtente = new User(payload.username(), payload.email(), bcrypt.encode(payload.password()), payload.firstName(), payload.lastName(), payload.avatar());
         newUtente.setAvatar("https://ui-avatars.com/api/?name=" + payload.firstName() + "+" + payload.lastName());
+        this.userRepository.save(newUtente);
         return newUtente;
     }
 
