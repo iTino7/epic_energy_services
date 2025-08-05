@@ -44,7 +44,24 @@ public class FatturaService {
         Fattura newFattura = new Fattura(payload.date(), payload.importo(), payload.numero(), stato, found);
         this.fatturaRepository.save(newFattura);
         return newFattura;
+    }
 
+    public Fattura findByIdAndUpdate(NewFatturaDTO payload, long id){
+        Fattura found = this.findById(id);
+        Cliente cliente = this.clienteService.findById(payload.clienteId());
+        StatoFattura stato = this.statoFatturaService.checkStato(payload.statoFattura());
+        found.setData(payload.date());
+        found.setImporto(payload.importo());
+        found.setNumero(payload.numero());
+        found.setStatoFattura(stato);
+        found.setCliente(cliente);
+
+        return this.fatturaRepository.save(found);
+    }
+
+    public void findByIdAndDelete(long id){
+        Fattura found = this.findById(id);
+        this.fatturaRepository.delete(found);
     }
 
 

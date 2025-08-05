@@ -73,6 +73,14 @@ public class Fattura {
         this.cliente = cliente;
     }
 
+    public StatoFattura getStatoFattura() {
+        return statoFattura;
+    }
+
+    public void setStatoFattura(StatoFattura statoFattura) {
+        this.statoFattura = statoFattura;
+    }
+
     @Override
     public String toString() {
         return "Fattura{" +

@@ -19,9 +19,9 @@ public class CityController {
     private ProvinciaService provinciaService;
 
     @GetMapping("/comuni")
-    public Page<Comune> findAllComuni(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "30") int size,
-                                @RequestParam(defaultValue = "denominazione") String sortBy){
+    public Page<Comune> findAllComuni(@RequestParam(name = "page", defaultValue = "0") int page,
+                                @RequestParam(name = "size",defaultValue = "30") int size,
+                                @RequestParam(name = "sortBy",defaultValue = "denominazione") String sortBy){
         return this.comuneService.findAll(page, size, sortBy);
     }
 
