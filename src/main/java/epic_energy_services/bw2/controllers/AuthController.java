@@ -28,15 +28,11 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserRespDTO register(@RequestBody @Validated NewUserDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
-            String errorMessages = validation.getAllErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce((message1, message2) -> message1 + "," + message2)
-                    .orElse("Errore nella registrazione");
-            throw new ValidationException(errorMessages);
-        }
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+        } else {
         User newUser = this.userService.save(body);
         return new UserRespDTO(newUser.getId());
+        }
     }
 
     @PostMapping("/login")

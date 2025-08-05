@@ -1,6 +1,7 @@
 package epic_energy_services.bw2.exception;
 
 import epic_energy_services.bw2.payloads.ErrorsDTO;
+import epic_energy_services.bw2.payloads.ErrorsWithListDTO;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,5 +29,18 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorsDTO handleUnauthorized(UnauthorizedException ex) {
         return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsWithListDTO handleValidationErrors(ValidationException ex) {
+        return new ErrorsWithListDTO(ex.getMessage(), LocalDateTime.now(), ex.getErrorMessages());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorsDTO handleServerError(Exception ex) {
+        ex.printStackTrace();
+        return new ErrorsDTO("Errore generico! Stiamo sistemando il problema!", LocalDateTime.now());
     }
 }
