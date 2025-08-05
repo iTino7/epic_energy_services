@@ -27,16 +27,21 @@ public class UserService {
     @Autowired
     private PasswordEncoder bcrypt;
 
+    //UTENTE APPENA CREATO HA RUOLO USER
     public User save(NewUserDTO payload) {
         this.userRepository.findByEmail(payload.email()).ifPresent(utenti -> {
-            throw new BadRequestException("L'email " + utenti.getEmail() +  "è già in uso");
+            throw new BadRequestException("L'email " + utenti.getEmail() +  " è già in uso");
         });
-        Ruolo newRuolo = new Ruolo("USER");
         User newUtente = new User(payload.username(), payload.email(), bcrypt.encode(payload.password()), payload.firstName(), payload.lastName(), payload.avatar());
         newUtente.setAvatar("https://ui-avatars.com/api/?name=" + payload.firstName() + "+" + payload.lastName());
-        this.userRepository.save(newUtente);
-        return newUtente;
+
+        Ruolo ruoloUser = ruoloRepository.findByNomeRuolo("USER")
+                .orElseThrow(() -> new RuntimeException("Ruolo USER non trovato"));
+        newUtente.getRuoli().add(ruoloUser);
+
+        return this.userRepository.save(newUtente);
     }
+
 
     public User findById(Long userId) {
         return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException("userId" + userId));
@@ -80,5 +85,17 @@ public class UserService {
         return this.userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("L'utente con l'email " + email + " non è stato trovato!"));
     }
 
+    public void assegnaRuoloAUser(Long userId, String nomeRuolo) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+
+        Ruolo ruolo = ruoloRepository.findByNomeRuolo(nomeRuolo)
+                .orElseThrow(() -> new RuntimeException("Ruolo non trovato"));
+
+
+        user.getRuoli().add(ruolo);
+
+        userRepository.save(user);
+    }
 
 }

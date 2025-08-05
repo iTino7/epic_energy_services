@@ -2,6 +2,7 @@ package epic_energy_services.bw2.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "ruolo")
 @Getter
+@NoArgsConstructor
 public class Ruolo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

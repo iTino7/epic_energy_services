@@ -77,4 +77,9 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+    public void setRuoli(Set<Ruolo> ruoli) {
+        this.ruoli = ruoli;
+    }
+
 }
