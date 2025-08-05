@@ -27,8 +27,10 @@ public class Cliente {
     private String cognomeContatto;
     private String telefonoContatto;
     private String logoAziendale;
+    @OneToOne
+    private IndirizzoSedeLegale sedeLegale;
     @OneToMany
-    private List<Indirizzo> indirizzi;
+    private List<IndirizzoSedeOperativa> sediOperative;
 
     public Cliente() {
     }
@@ -49,12 +51,20 @@ public class Cliente {
         this.logoAziendale = logoAziendale;
     }
 
-    public List<Indirizzo> getIndirizzi() {
-        return indirizzi;
+    public IndirizzoSedeLegale getSedeLegale() {
+        return sedeLegale;
     }
 
-    public void setIndirizzi(List<Indirizzo> indirizzi) {
-        this.indirizzi = indirizzi;
+    public void setSedeLegale(IndirizzoSedeLegale sedeLegale) {
+        this.sedeLegale = sedeLegale;
+    }
+
+    public List<IndirizzoSedeOperativa> getSediOperative() {
+        return sediOperative;
+    }
+
+    public void setSediOperative(List<IndirizzoSedeOperativa> sediOperative) {
+        this.sediOperative = sediOperative;
     }
 
     public long getId() {
