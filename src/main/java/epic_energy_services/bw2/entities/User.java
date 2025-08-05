@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class User implements UserDetails {
 
     private String username;
     private String email;
+    @JsonIgnore
     private String password;
     private String nome;
     private String cognome;
