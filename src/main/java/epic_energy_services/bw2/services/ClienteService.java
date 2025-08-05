@@ -26,6 +26,11 @@ public class ClienteService {
         return clienteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(email));
     }
 
+    public Cliente getById(long id) {
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Cliente non trovato con questo id: " + id));
+    }
+
     public Cliente createClient(NewClienteDTO payload) {
 
         if (clienteRepository.existsByEmail(payload.getEmail())) {
