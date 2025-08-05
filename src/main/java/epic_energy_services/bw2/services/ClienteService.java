@@ -1,6 +1,7 @@
 package epic_energy_services.bw2.services;
 
 import epic_energy_services.bw2.entities.Cliente;
+import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.exception.NotFoundException;
 import epic_energy_services.bw2.payloads.NewClienteDTO;
 import epic_energy_services.bw2.repositories.ClienteRepository;
@@ -26,6 +27,11 @@ public class ClienteService {
     }
 
     public Cliente createClient(NewClienteDTO payload) {
+
+        if (clienteRepository.existsByEmail(payload.getEmail())) {
+            throw new BadRequestException("Email già presente: " + payload.getEmail());
+        }
+
         Cliente cliente = new Cliente(payload.getRagioneSociale(),
                 payload.getPartitaIva(),
                 payload.getEmail(),
