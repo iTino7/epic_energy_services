@@ -1,7 +1,7 @@
 package epic_energy_services.bw2.services;
 
-import epic_energy_services.bw2.entities.Indirizzo;
-import epic_energy_services.bw2.repositories.IndirizzoRepository;
+import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
+import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,27 +9,27 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class IndirizzoService {
-    private final IndirizzoRepository indirizzoRepository;
+public class IndirizzoSedeLegaleService {
+    private final IndirizzoSedeLegaleRepository indirizzoRepository;
 
     @Autowired
-    public IndirizzoService(IndirizzoRepository indirizzoRepository) {
+    public IndirizzoSedeLegaleService(IndirizzoSedeLegaleRepository indirizzoRepository) {
         this.indirizzoRepository = indirizzoRepository;
     }
 
-    public List<Indirizzo> findAll() {
+    public List<IndirizzoSedeLegale> findAll() {
         return indirizzoRepository.findAll();
     }
 
-    public Optional<Indirizzo> findById(Long id) {
+    public Optional<IndirizzoSedeLegale> findById(Long id) {
         return indirizzoRepository.findById(id);
     }
 
-    public Indirizzo save(Indirizzo indirizzo) {
+    public IndirizzoSedeLegale save(IndirizzoSedeLegale indirizzo) {
         return indirizzoRepository.save(indirizzo);
     }
 
-    public Indirizzo update(Long id, Indirizzo indirizzoDetails) {
+    public IndirizzoSedeLegale update(Long id, IndirizzoSedeLegale indirizzoDetails) {
         return indirizzoRepository.findById(id)
                 .map(indirizzo -> {
                     indirizzo.setVia(indirizzoDetails.getVia());
@@ -38,7 +38,7 @@ public class IndirizzoService {
                     indirizzo.setCap(indirizzoDetails.getCap());
                     indirizzo.setComune(indirizzoDetails.getComune());
                     return indirizzoRepository.save(indirizzo);
-                }).orElseThrow(() -> new RuntimeException("indirizzo non trovato con id: " + id));
+                }).orElseThrow(() -> new RuntimeException("indirizzo con sede legale non trovato con id: " + id));
     }
 
     public void delete(Long id) {

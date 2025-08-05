@@ -2,10 +2,12 @@ package epic_energy_services.bw2.controllers;
 
 import epic_energy_services.bw2.entities.User;
 import epic_energy_services.bw2.payloads.NewUserDTO;
+import epic_energy_services.bw2.payloads.NewUserRespDTO;
 import epic_energy_services.bw2.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,48 +29,49 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public User getUserById(@PathVariable Long id) {
         return userService.findById(id);
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public User createUser(@RequestBody @Valid NewUserDTO newUserDTO) {
         return userService.save(newUserDTO);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public User updateUser(@PathVariable Long id, @RequestBody @Valid NewUserDTO newUserDTO) {
         return userService.findByIdAndUpdate(id, newUserDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(@PathVariable Long id) {
         userService.findByIdAndDelete(id);
     }
 
-    // ENPOINT ME
+    // ENDPOINT ME
 
     @GetMapping("/me")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public User getProfile(@AuthenticationPrincipal User currentUser) {
-        return currentUser;
+    @PreAuthorize("hasAuthority('USER','ADMIN')")
+    public User getProfile(@AuthenticationPrincipal User currentAuthenticatedUser) {
+        return currentAuthenticatedUser;
     }
 
     @PutMapping("/me")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public User updateOwnProfile(@AuthenticationPrincipal User currentUser, @RequestBody @Valid NewUserDTO newUserDTO) {
-        return userService.findByIdAndUpdate(currentUser.getId(), newUserDTO);
+    @PreAuthorize("hasAuthority('USER', 'ADMIN')")
+    public User updateOwnProfile(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody @Valid NewUserDTO newUserDTO) {
+        return userService.findByIdAndUpdate(currentAuthenticatedUser.getId(), newUserDTO);
     }
 
 
     @DeleteMapping("/me")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public void deleteMe(@AuthenticationPrincipal User currentUser) {
-        userService.findByIdAndDelete(currentUser.getId());
+    @PreAuthorize("hasAuthority('USER', 'ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMe(@AuthenticationPrincipal User currentAuthenticatedUser) {
+        userService.findByIdAndDelete(currentAuthenticatedUser.getId());
     }
 
 

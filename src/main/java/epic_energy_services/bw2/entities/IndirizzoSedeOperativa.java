@@ -3,7 +3,7 @@ package epic_energy_services.bw2.entities;
 import jakarta.persistence.*;
 
 @Entity
-public class Indirizzo {
+public class IndirizzoSedeOperativa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,10 +15,10 @@ public class Indirizzo {
     @ManyToOne
     private Comune comune;
 
-    private Indirizzo() {
+    private IndirizzoSedeOperativa() {
     }
 
-    public Indirizzo(String via, String civico, String località, String cap, Comune comune) {
+    public IndirizzoSedeOperativa(String via, String civico, String località, String cap, Comune comune) {
         this.via = via;
         this.civico = civico;
         this.località = località;
