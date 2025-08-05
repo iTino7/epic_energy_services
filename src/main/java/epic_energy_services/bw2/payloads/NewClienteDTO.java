@@ -36,22 +36,23 @@ public class NewClienteDTO {
     String cognomeContatto;
     @NotBlank(message = "Il telefono di contatto è obbligatorio!")
     String telefonoContatto;
-    //@NotBlank(message = "Il logo aziendale è obbligatorio")
-    //String logoAziendale
+    @NotBlank(message = "Il logo aziendale è obbligatorio")
+    String logoAziendale;
 
 
-    public NewClienteDTO(String ragioneSociale, String email, int partitaIva, LocalDate dataInserimento, LocalDate dataUltimoContratto, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String cognomeContatto, String telefonoContatto) {
+    public NewClienteDTO(String ragioneSociale, int partitaIva, String email, LocalDate dataUltimoContratto, LocalDate dataInserimento, double fatturatoAnnuale, String pec, String emailContatto, String telefono, String cognomeContatto, String telefonoContatto, String logoAziendale) {
         this.ragioneSociale = ragioneSociale;
-        this.email = email;
         this.partitaIva = partitaIva;
-        this.dataInserimento = dataInserimento;
+        this.email = email;
         this.dataUltimoContratto = dataUltimoContratto;
+        this.dataInserimento = dataInserimento;
         this.fatturatoAnnuale = fatturatoAnnuale;
         this.pec = pec;
-        this.telefono = telefono;
         this.emailContatto = emailContatto;
+        this.telefono = telefono;
         this.cognomeContatto = cognomeContatto;
         this.telefonoContatto = telefonoContatto;
+        this.logoAziendale = logoAziendale;
     }
 
     public String getRagioneSociale() {
@@ -140,6 +141,14 @@ public class NewClienteDTO {
 
     public void setCognomeContatto(String cognomeContatto) {
         this.cognomeContatto = cognomeContatto;
+    }
+
+    public String getLogoAziendale() {
+        return logoAziendale;
+    }
+
+    public void setLogoAziendale(String logoAziendale) {
+        this.logoAziendale = logoAziendale;
     }
 
     @Override

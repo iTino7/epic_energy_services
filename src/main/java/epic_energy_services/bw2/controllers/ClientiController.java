@@ -7,7 +7,6 @@ import epic_energy_services.bw2.payloads.NewClienteDTO;
 import epic_energy_services.bw2.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -20,8 +19,11 @@ public class ClientiController {
     private ClienteService clienteService;
 
     @GetMapping
-    public Page<Cliente> getAllClient(Pageable pageable) {
-        return clienteService.getClient(pageable);
+    public Page<Cliente> getAllClient(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(defaultValue = "id") String sort_by) {
+        return this.clienteService.getClient(page, size, sort_by);
     }
 
     @PostMapping

@@ -6,7 +6,9 @@ import epic_energy_services.bw2.payloads.NewClienteDTO;
 import epic_energy_services.bw2.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,28 +18,28 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public Cliente findById(long id) {
-        return this.clienteRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        return this.clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente con questo id " + id + " non trovato"));
     }
 
     public Cliente findByEmail(String email) {
         return clienteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(email));
     }
 
-    public Cliente createClient(NewClienteDTO dto) {
-        Cliente cliente = new Cliente();
-        cliente.setRagioneSociale(dto.getRagioneSociale());
-        cliente.setPartitaIva(dto.getPartitaIva());
-        cliente.setEmail(dto.getEmail());
-        cliente.setDataInserimento(dto.getDataInserimento());
-        cliente.setDataUltimoContratto(dto.getDataUltimoContratto());
-        cliente.setFatturatoAnnuale(dto.getFatturatoAnnuale());
-        cliente.setPec(dto.getPec());
-        cliente.setTelefono(dto.getTelefono());
-        cliente.setEmailContatto(dto.getEmailContatto());
-        cliente.setCognomeContatto(dto.getCognomeContatto());
-        cliente.setTelefonoContatto(dto.getTelefonoContatto());
-
-
+    public Cliente createClient(NewClienteDTO payload) {
+        Cliente cliente = new Cliente(payload.getRagioneSociale(),
+                payload.getPartitaIva(),
+                payload.getEmail(),
+                payload.getDataInserimento(),
+                payload.getDataUltimoContratto(),
+                payload.getFatturatoAnnuale(),
+                payload.getPec(),
+                payload.getTelefono(),
+                payload.getEmailContatto(),
+                payload.getCognomeContatto(),
+                payload.getEmailContatto(),
+                payload.getTelefonoContatto(),
+                payload.getLogoAziendale()
+        );
         return clienteRepository.save(cliente);
     }
 
@@ -58,7 +60,8 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public Page<Cliente> getClient(Pageable pageable) {
+    public Page<Cliente> getClient(int pageNumber, int pageSize, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
         return clienteRepository.findAll(pageable);
     }
 
