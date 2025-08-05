@@ -8,12 +8,12 @@ import epic_energy_services.bw2.repositories.RuoloRepository;
 import epic_energy_services.bw2.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 @Service
 @Slf4j
@@ -28,7 +28,7 @@ public class UserService {
 
     public User save(NewUserDTO payload) {
         this.userRepository.findByEmail(payload.email()).ifPresent(utenti -> {
-            throw new BadRequestException("L'email " + utenti.getEmail() +  "è già in uso");
+            throw new BadRequestException("L'email " + utenti.getEmail() + "è già in uso");
         });
         User newUtente = new User(payload.username(), payload.email(), bcrypt.encode(payload.password()), payload.firstName(), payload.lastName(), payload.avatar(), payload.ruoli());
         newUtente.setAvatar("https://ui-avatars.com/api/?name=" + payload.firstName() + "+" + payload.lastName());
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public User findById(Long userId) {
-        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException("userId" + userId));
     }
 
     public User findByIdAndUpdate(Long userId, NewUserDTO payload) {
@@ -66,6 +66,7 @@ public class UserService {
         User found = this.findById(userId);
         this.userRepository.delete(found);
     }
+
     public Page<User> findAll(int pageNumber, int pageSize, String sortBy) {
         if (pageSize > 50) pageSize = 50;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
