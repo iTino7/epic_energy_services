@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public User findById(Long userId) {
-        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException("ciao"));
     }
 
     public User findByIdAndUpdate(Long userId, NewUserDTO payload) {
