@@ -38,14 +38,13 @@ public class User implements UserDetails {
     )
     private Set<Ruolo> ruoli = new HashSet<>();
 
-    public User(String username, String email, String password, String nome, String cognome, String avatar, Set<Ruolo> ruoli) {
+    public User(String username, String email, String password, String nome, String cognome, String avatar) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.nome = nome;
         this.cognome = cognome;
         this.avatar = avatar;
-        this.ruoli = ruoli;
     }
 
 

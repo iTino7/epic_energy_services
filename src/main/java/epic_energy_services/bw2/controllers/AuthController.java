@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.controllers;
 
+import epic_energy_services.bw2.entities.User;
 import epic_energy_services.bw2.exception.ValidationException;
 import epic_energy_services.bw2.payloads.LoginRespDTO;
 import epic_energy_services.bw2.payloads.NewUserDTO;
@@ -34,7 +35,8 @@ public class AuthController {
                     .orElse("Errore nella registrazione");
             throw new ValidationException(errorMessages);
         }
-        return new UserRespDTO(this.userService.save(body).getId());
+        User newUser = this.userService.save(body);
+        return new UserRespDTO(newUser.getId());
     }
 
     @PostMapping("/login")

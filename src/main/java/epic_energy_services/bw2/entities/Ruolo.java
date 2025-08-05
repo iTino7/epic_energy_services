@@ -27,4 +27,8 @@ public class Ruolo {
     public void setUtenti(Set<User> utenti) {
         this.utenti = utenti;
     }
+
+    public Ruolo(String nomeRuolo) {
+        this.nomeRuolo = nomeRuolo;
+    }
 }

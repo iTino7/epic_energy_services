@@ -21,6 +21,4 @@ public record NewUserDTO(
 
         String firstName,
         String lastName,
-        String avatar,
-
-        Set<Ruolo> ruoli ) {}
+        String avatar) {}
