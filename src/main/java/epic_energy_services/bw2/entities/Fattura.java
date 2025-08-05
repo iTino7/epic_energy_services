@@ -28,10 +28,11 @@ public class Fattura {
     public Fattura() {
     }
 
-    public Fattura(LocalDate data, double importo, int numero, Cliente cliente) {
+    public Fattura(LocalDate data, double importo, int numero, StatoFattura statoFattura, Cliente cliente) {
         this.data = data;
         this.importo = importo;
         this.numero = numero;
+        this.statoFattura = statoFattura;
         this.cliente = cliente;
     }
 
