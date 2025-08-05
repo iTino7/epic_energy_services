@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FatturaService {
     @Autowired
@@ -64,7 +66,10 @@ public class FatturaService {
         this.fatturaRepository.delete(found);
     }
 
-
+    public List<Fattura> findFattureByCliente(long clienteId){
+        Cliente found = this.clienteService.findById(clienteId);
+        return this.fatturaRepository.findByCliente(found).orElseThrow(()-> new NotFoundException("Nessuna fattura trovata intestata a questo cliente."));
+    }
 
 
 

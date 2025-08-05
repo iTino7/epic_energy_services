@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/fatture")
 public class FatturaController {
@@ -53,4 +55,8 @@ public class FatturaController {
         this.fatturaService.findByIdAndDelete(fatturaId);
     }
 
+    @GetMapping("/cliente/{clienteId}")
+    public List<Fattura> findAllFattureByCliente(@PathVariable("clienteId") long clienteId){
+        return this.fatturaService.findFattureByCliente(clienteId);
+    }
 }

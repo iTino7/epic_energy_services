@@ -18,26 +18,26 @@ public class CityController {
     @Autowired
     private ProvinciaService provinciaService;
 
-    @GetMapping("/comuni")
+    @GetMapping("/comuni/all")
     public Page<Comune> findAllComuni(@RequestParam(name = "page", defaultValue = "0") int page,
                                 @RequestParam(name = "size",defaultValue = "30") int size,
                                 @RequestParam(name = "sortBy",defaultValue = "denominazione") String sortBy){
         return this.comuneService.findAll(page, size, sortBy);
     }
 
-    @GetMapping("/{comuneId}")
+    @GetMapping("/comuni/{comuneId}")
     public Comune findComuneById(@PathVariable long comuneId){
         return this.comuneService.findById(comuneId);
     }
 
-    @GetMapping("/province")
+    @GetMapping("/province/all")
     public Page<Provincia> findAllProvince(@RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "30") int size,
                                            @RequestParam(defaultValue = "provincia") String sortBy){
         return this.provinciaService.findAll(page, size, sortBy);
     }
 
-    @GetMapping("/{provinciaId}")
+    @GetMapping("/province/{provinciaId}")
     public Provincia findProvinciaById(@PathVariable long provinciaId){
         return this.provinciaService.findById(provinciaId);
     }
