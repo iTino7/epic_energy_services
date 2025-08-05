@@ -35,7 +35,7 @@ public class IndirizzoSedeOperativaService {
                     existing.setCap(dettagli.getCap());
                     existing.setComune(dettagli.getComune());
                     return repository.save(existing);
-                }).orElseThrow(()->new RuntimeException()"Indirizzo sede Operativa non trovato con ID: " + id);
+                }).orElseThrow(()->new RuntimeException("Indirizzo sede Operativa non trovato con ID: " + id));
     }
     public void delete(Long id){
         repository.deleteById(id);
