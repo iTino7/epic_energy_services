@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +28,15 @@ public class ClientiController {
         return this.clienteService.getClient(page, size, sort_by);
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER','ADMIN')")
+    public Cliente getById(@PathVariable long id) {
+        return clienteService.getById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Cliente createClient(@RequestBody @Validated NewClienteDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
             String errorMessages = validation.getAllErrors()
@@ -42,6 +50,7 @@ public class ClientiController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Cliente updateClient(@PathVariable long id, @RequestBody @Validated NewClienteDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
             String errorMessages = validation.getAllErrors()
@@ -56,6 +65,7 @@ public class ClientiController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteClient(@PathVariable long id) {
         clienteService.deleteClient(id);
     }
