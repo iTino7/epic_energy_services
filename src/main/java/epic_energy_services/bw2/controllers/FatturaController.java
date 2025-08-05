@@ -1,6 +1,6 @@
 package epic_energy_services.bw2.controllers;
 
-import epic_energy_services.bw2.entities.Comune;
+
 import epic_energy_services.bw2.entities.Fattura;
 import epic_energy_services.bw2.exception.ValidationException;
 import epic_energy_services.bw2.payloads.NewFatturaDTO;
@@ -38,7 +38,7 @@ public class FatturaController {
     }
 
     @PutMapping("/{fatturaId}")
-    public NewFatturaRespDTO findByIdAndUpdate(@RequestBody @Validated NewFatturaDTO payload, BindingResult validationResults,@PathVariable long fatturaId){
+    public NewFatturaRespDTO findByIdAndUpdate(@RequestBody @Validated NewFatturaDTO payload, BindingResult validationResults,@PathVariable("fatturaId") long fatturaId){
         if (validationResults.hasErrors()) {
             throw new ValidationException(validationResults.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
         } else {
@@ -52,4 +52,5 @@ public class FatturaController {
     public void deleteFattura(@PathVariable long fatturaId){
         this.fatturaService.findByIdAndDelete(fatturaId);
     }
+
 }
