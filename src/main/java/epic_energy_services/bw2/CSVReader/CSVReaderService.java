@@ -41,7 +41,6 @@ public class CSVReaderService {
                 Provincia provinciaNew = new Provincia(sigla, provincia, regione);
                 this.provinciaRepository.save(provinciaNew);
 
-                // System.out.println("SIGLA: " + sigla + ", PROVINCIA: " + provincia + ", REGIONE: " + regione);
             }
         } catch (IOException e) {
             e.printStackTrace();
