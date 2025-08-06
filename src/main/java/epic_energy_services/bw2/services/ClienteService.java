@@ -31,7 +31,7 @@ public class ClienteService {
                 .orElseThrow(() -> new NotFoundException("Cliente non trovato con questo id: " + id));
     }
 
-    public Cliente createClient(NewClienteDTO payload) {
+    public Cliente save(NewClienteDTO payload) {
 
         if (clienteRepository.existsByEmail(payload.getEmail())) {
             throw new BadRequestException("Email già presente: " + payload.getEmail());

@@ -46,7 +46,7 @@ public class ClientiController {
                     .orElse("Errore di validazione");
             throw new ValidationException(errorMessages);
         }
-        return clienteService.createClient(body);
+        return clienteService.save(body);
     }
 
     @PutMapping("/{id}")
