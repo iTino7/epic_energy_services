@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface IndirizzoSedeLegaleRepository extends JpaRepository<IndirizzoSedeLegale, Long> {
     List<IndirizzoSedeLegale> findByCap(String cap);
 
-    List<IndirizzoSedeLegale> findByNomeComune(String nomeComune);
+    Optional<IndirizzoSedeLegale> findByComune_Denominazione(String denominazione);
 
     Optional<IndirizzoSedeLegale> findByViaAndCivico(String via, String Civico);
 }
