@@ -53,7 +53,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return ruoli.stream()
-                .map(r -> new SimpleGrantedAuthority( r.getNomeRuolo()))
+                .map(r -> new SimpleGrantedAuthority(r.getNomeRuolo()))
                 .collect(Collectors.toList());
     }
 

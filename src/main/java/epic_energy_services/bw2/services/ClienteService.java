@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class ClienteService {
 
@@ -33,40 +35,39 @@ public class ClienteService {
 
     public Cliente createClient(NewClienteDTO payload) {
 
-        if (clienteRepository.existsByEmail(payload.getEmail())) {
-            throw new BadRequestException("Email già presente: " + payload.getEmail());
+        if (clienteRepository.existsByEmail(payload.email())) {
+            throw new BadRequestException("Email già presente: " + payload.email());
         }
 
-        Cliente cliente = new Cliente(payload.getRagioneSociale(),
-                payload.getPartitaIva(),
-                payload.getEmail(),
-                payload.getDataInserimento(),
-                payload.getDataUltimoContratto(),
-                payload.getFatturatoAnnuale(),
-                payload.getPec(),
-                payload.getTelefono(),
-                payload.getEmailContatto(),
-                payload.getCognomeContatto(),
-                payload.getEmailContatto(),
-                payload.getTelefonoContatto(),
-                payload.getLogoAziendale()
+        Cliente cliente = new Cliente(payload.ragioneSociale(),
+                payload.partitaIva(),
+                payload.email(),
+                LocalDate.now(),
+                payload.dataUltimoContatto(),
+                payload.fatturatoAnnuale(),
+                payload.pec(),
+                payload.telefono(),
+                payload.emailContatto(),
+                payload.nomeContatto(),
+                payload.cognomeContatto(),
+                payload.telefonoContatto(),
+                "https://ui-avatars.com/api/?name=" + payload.nomeContatto() + "+" + payload.cognomeContatto()
         );
         return clienteRepository.save(cliente);
     }
 
     public Cliente updateClient(Long id, NewClienteDTO update) {
         Cliente cliente = this.findById(id);
-        cliente.setRagioneSociale(update.getRagioneSociale());
-        cliente.setPartitaIva(update.getPartitaIva());
-        cliente.setEmail(update.getEmail());
-        cliente.setDataInserimento(update.getDataInserimento());
-        cliente.setDataUltimoContratto(update.getDataUltimoContratto());
-        cliente.setFatturatoAnnuale(update.getFatturatoAnnuale());
-        cliente.setPec(update.getPec());
-        cliente.setTelefono(update.getTelefono());
-        cliente.setEmailContatto(update.getEmailContatto());
-        cliente.setCognomeContatto(update.getCognomeContatto());
-        cliente.setTelefonoContatto(update.getTelefonoContatto());
+        cliente.setRagioneSociale(update.ragioneSociale());
+        cliente.setPartitaIva(update.partitaIva());
+        cliente.setEmail(update.email());
+        cliente.setDataUltimoContratto(update.dataUltimoContatto());
+        cliente.setFatturatoAnnuale(update.fatturatoAnnuale());
+        cliente.setPec(update.pec());
+        cliente.setTelefono(update.telefono());
+        cliente.setEmailContatto(update.emailContatto());
+        cliente.setCognomeContatto(update.cognomeContatto());
+        cliente.setTelefonoContatto(update.telefonoContatto());
 
         return clienteRepository.save(cliente);
     }
