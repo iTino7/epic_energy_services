@@ -24,6 +24,7 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    //TODO - ELIMINARE QUESTO ENDPOINT
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserRespDTO register(@RequestBody @Validated NewUserDTO body, BindingResult validation) {

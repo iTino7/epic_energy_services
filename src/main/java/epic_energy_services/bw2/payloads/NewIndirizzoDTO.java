@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.payloads;
 
+import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

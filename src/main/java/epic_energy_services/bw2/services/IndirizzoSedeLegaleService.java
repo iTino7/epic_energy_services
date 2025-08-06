@@ -2,9 +2,10 @@ package epic_energy_services.bw2.services;
 
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
-import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
+import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ public class IndirizzoSedeLegaleService {
 
     @Autowired
     private IndirizzoSedeLegaleRepository indirizzoRepository;
+    @Autowired
+    private ComuneRepository comuneRepository;
 
     public List<IndirizzoSedeLegale> findAll() {
         return indirizzoRepository.findAll();

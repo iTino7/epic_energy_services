@@ -1,6 +1,7 @@
 package epic_energy_services.bw2.controllers;
 
 import epic_energy_services.bw2.entities.User;
+import epic_energy_services.bw2.exception.ValidationException;
 import epic_energy_services.bw2.payloads.NewUserDTO;
 import epic_energy_services.bw2.services.UserService;
 import jakarta.validation.Valid;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,18 +38,27 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User createUser(@RequestBody @Valid NewUserDTO newUserDTO) {
+    public User createUser(@RequestBody @Validated NewUserDTO newUserDTO, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+        } else {
         return userService.save(newUserDTO);
+        }
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User updateUser(@PathVariable Long id, @RequestBody @Valid NewUserDTO newUserDTO) {
+    public User updateUser(@PathVariable Long id, @RequestBody @Validated NewUserDTO newUserDTO, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+        }else {
         return userService.findByIdAndUpdate(id, newUserDTO);
+        }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
         userService.findByIdAndDelete(id);
     }
@@ -63,11 +75,13 @@ public class UserController {
     @PutMapping("/me")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public User updateOwnProfile(@AuthenticationPrincipal User currentAuthenticatedUser,
-                                 @RequestBody @Valid NewUserDTO newUserDTO) {
+                                 @RequestBody @Validated NewUserDTO newUserDTO, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+        } else {
         return userService.findByIdAndUpdate(currentAuthenticatedUser.getId(), newUserDTO);
+        }
     }
-
-
 
 
     @DeleteMapping("/me")

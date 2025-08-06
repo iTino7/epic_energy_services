@@ -44,7 +44,7 @@ public class UserService {
 
 
     public User findById(Long userId) {
-        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException("userId" + userId));
+        return this.userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User con id " + userId + " non trovato."));
     }
 
     public User findByIdAndUpdate(Long userId, NewUserDTO payload) {
@@ -57,10 +57,11 @@ public class UserService {
                 throw new BadRequestException("L'email " + user.getEmail() + " è già in uso!");
             });
 
+        found.setUsername(payload.username());
         found.setNome(payload.firstName());
         found.setCognome(payload.lastName());
         found.setEmail(payload.email());
-        found.setPassword(payload.password());
+        found.setPassword( bcrypt.encode(payload.password()));
         found.setAvatar("https://ui-avatars.com/api/?name=" + payload.firstName() + "+" + payload.lastName());
 
         User modifiedUser = this.userRepository.save(found);
