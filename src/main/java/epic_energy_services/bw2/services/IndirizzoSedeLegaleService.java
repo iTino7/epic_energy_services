@@ -2,6 +2,7 @@ package epic_energy_services.bw2.services;
 
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
+import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
 import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
@@ -18,7 +19,7 @@ public class IndirizzoSedeLegaleService {
     @Autowired
     private IndirizzoSedeLegaleRepository indirizzoRepository;
     @Autowired
-    private ComuneRepository comuneRepository;
+    private ComuneService comuneService;
 
     public List<IndirizzoSedeLegale> findAll() {
         return indirizzoRepository.findAll();
@@ -28,9 +29,15 @@ public class IndirizzoSedeLegaleService {
         return indirizzoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("sede legale non trovata"));
     }
 
-    public IndirizzoSedeLegale save(IndirizzoSedeLegale indirizzo) {
+    public IndirizzoSedeLegale crea(NewIndirizzoDTO dto) {
+        Comune comune = comuneService.findById(dto.comuneId());
+
+        IndirizzoSedeLegale indirizzo = new IndirizzoSedeLegale(
+                dto.via(), dto.civico(), dto.località(), dto.cap(), comune
+        );
         return indirizzoRepository.save(indirizzo);
     }
+
 
     public List<IndirizzoSedeLegale> findByCap(String cap) {
         return indirizzoRepository.findByCap(cap);
@@ -40,21 +47,30 @@ public class IndirizzoSedeLegaleService {
         return indirizzoRepository.findByComune_Denominazione(denominazione);
     }
 
-    public Optional<IndirizzoSedeLegale> findByViaAndCivico(String via, String civico) {
-        return indirizzoRepository.findByViaAndCivico(via, civico);
+    public void findByViaAndCivico(String via, String civico) {
+        indirizzoRepository.findByViaAndCivico(via, civico).ifPresent(Indirizzo  -> { throw new BadRequestException("Indirizzo in " +via  + "al civico " +civico + "esiste già ");});
     }
 
     public IndirizzoSedeLegale update(Long id, NewIndirizzoDTO newIndirizzoDTO) {
-        return indirizzoRepository.findById(id)
-                .map(indirizzo -> {
-                    indirizzo.setVia(indirizzoDetails.getVia());
-                    indirizzo.setCivico(indirizzoDetails.getCivico());
-                    indirizzo.setLocalità(indirizzoDetails.getLocalità());
-                    indirizzo.setCap(indirizzoDetails.getCap());
-                    indirizzo.setComune(indirizzoDetails.getComune());
-                    return indirizzoRepository.save(indirizzo);
-                }).orElseThrow(() -> new RuntimeException("indirizzo con sede legale non trovato con id: " + id));
+        //Trovo ID
+        IndirizzoSedeLegale found = this.findById(id);
+
+        //Cerco Via e Civico
+        this.findByViaAndCivico(newIndirizzoDTO.via(), newIndirizzoDTO.civico());
+
+        Comune comune = comuneService.findById(newIndirizzoDTO.comuneId());
+
+        found.setVia(newIndirizzoDTO.via());
+        found.setCivico(newIndirizzoDTO.civico());
+        found.setLocalità(newIndirizzoDTO.località());
+        found.setCap(newIndirizzoDTO.cap());
+        found.setComune(comune);
+
+
+        return indirizzoRepository.save(found);
     }
+
+
 
     public void delete(Long id) {
         indirizzoRepository.deleteById(id);
