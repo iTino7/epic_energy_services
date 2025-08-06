@@ -36,9 +36,9 @@ public class IndirizzoSedeLegaleService {
         return indirizzoRepository.findByCap(cap);
     }
 
-    public List<IndirizzoSedeLegale> findByNomeComune(String nomeComune) {
-        return indirizzoRepository.findByNomeComune(nomeComune);
-    }
+//    public List<IndirizzoSedeLegale> findByNomeComune(String nomeComune) {
+//        return indirizzoRepository.findByNomeComune(nomeComune);
+//    }
 
     public Optional<IndirizzoSedeLegale> findByViaAndCivico(String via, String civico) {
         return indirizzoRepository.findByViaAndCivico(via, civico);

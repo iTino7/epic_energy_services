@@ -9,6 +9,7 @@ import epic_energy_services.bw2.services.FatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,14 +23,16 @@ public class FatturaController {
     private FatturaService fatturaService;
 
     @GetMapping
-    public Page<Fattura> findAll(@RequestParam(name = "page",defaultValue = "0") int page,
-                                       @RequestParam(name = "size",defaultValue = "30") int size,
-                                       @RequestParam(name = "sortBy",defaultValue = "id") String sortBy) {
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    public Page<Fattura> findAll(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "30") int size,
+                                       @RequestParam(defaultValue = "id") String sortBy) {
         return this.fatturaService.findAllFatture(page, size, sortBy);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public NewFatturaRespDTO createFattura (@RequestBody @Validated NewFatturaDTO payload, BindingResult validationResults){
         if (validationResults.hasErrors()) {
             throw new ValidationException(validationResults.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
@@ -40,6 +43,7 @@ public class FatturaController {
     }
 
     @PutMapping("/{fatturaId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public NewFatturaRespDTO findByIdAndUpdate(@RequestBody @Validated NewFatturaDTO payload, BindingResult validationResults,@PathVariable("fatturaId") long fatturaId){
         if (validationResults.hasErrors()) {
             throw new ValidationException(validationResults.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
@@ -51,11 +55,13 @@ public class FatturaController {
 
     @DeleteMapping("/{fatturaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFattura(@PathVariable long fatturaId){
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void deleteFattura(@PathVariable("fatturaId") long fatturaId){
         this.fatturaService.findByIdAndDelete(fatturaId);
     }
 
     @GetMapping("/cliente/{clienteId}")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public List<Fattura> findAllFattureByCliente(@PathVariable("clienteId") long clienteId){
         return this.fatturaService.findFattureByCliente(clienteId);
     }

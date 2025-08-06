@@ -21,6 +21,7 @@ public class ClientiController {
     private ClienteService clienteService;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Page<Cliente> getAllClient(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
@@ -29,24 +30,20 @@ public class ClientiController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Cliente getById(@PathVariable long id) {
         return clienteService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public Cliente createClient(@RequestBody @Validated NewClienteDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
-            String errorMessages = validation.getAllErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce((message1, message2) -> message1 + "," + message2)
-                    .orElse("Errore di validazione");
-            throw new ValidationException(errorMessages);
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+        } else {
+            return clienteService.createClient(body);
         }
-        return clienteService.createClient(body);
     }
 
     @PutMapping("/{id}")
