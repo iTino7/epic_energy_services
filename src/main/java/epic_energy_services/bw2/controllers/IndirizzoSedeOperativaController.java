@@ -30,4 +30,9 @@ public class IndirizzoSedeOperativaController {
         return service.creaNuovaSedeOperativa(dto, comune);
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteByid(@PathVariable Long id) {
+        service.delete(id);
+    }
+
 }

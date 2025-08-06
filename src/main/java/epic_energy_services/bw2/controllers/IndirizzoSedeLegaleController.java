@@ -4,7 +4,6 @@ import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
 import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.services.IndirizzoSedeLegaleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,5 +31,5 @@ public class IndirizzoSedeLegaleController {
         return service.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("sede legale non trovata"));
     }
-    
+
 }
