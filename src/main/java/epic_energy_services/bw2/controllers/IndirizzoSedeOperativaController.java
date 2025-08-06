@@ -6,14 +6,17 @@ import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
 import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.services.IndirizzoSedeOperativaService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sedi-operative")
 public class IndirizzoSedeOperativaController {
-    private final IndirizzoSedeOperativaService service;
-    private final ComuneRepository comuneRepository;
+    @Autowired
+    private IndirizzoSedeOperativaService service;
+    @Autowired
+    private ComuneRepository comuneRepository;
 
     public IndirizzoSedeOperativaController(IndirizzoSedeOperativaService service, ComuneRepository comuneRepository) {
         this.service = service;
