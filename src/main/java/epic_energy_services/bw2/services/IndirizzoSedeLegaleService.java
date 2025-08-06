@@ -13,19 +13,16 @@ import java.util.Optional;
 
 @Service
 public class IndirizzoSedeLegaleService {
-    private final IndirizzoSedeLegaleRepository indirizzoRepository;
 
     @Autowired
-    public IndirizzoSedeLegaleService(IndirizzoSedeLegaleRepository indirizzoRepository) {
-        this.indirizzoRepository = indirizzoRepository;
-    }
+    private IndirizzoSedeLegaleRepository indirizzoRepository;
 
     public List<IndirizzoSedeLegale> findAll() {
         return indirizzoRepository.findAll();
     }
 
-    public Optional<IndirizzoSedeLegale> findById(Long id) {
-        return indirizzoRepository.findById(id);
+    public IndirizzoSedeLegale findById(Long id) {
+        return indirizzoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("sede legale non trovata"));
     }
 
     public IndirizzoSedeLegale save(IndirizzoSedeLegale indirizzo) {
@@ -44,7 +41,7 @@ public class IndirizzoSedeLegaleService {
         return indirizzoRepository.findByViaAndCivico(via, civico);
     }
 
-    public IndirizzoSedeLegale update(Long id, IndirizzoSedeLegale indirizzoDetails) {
+    public IndirizzoSedeLegale update(Long id, NewIndirizzoDTO newIndirizzoDTO) {
         return indirizzoRepository.findById(id)
                 .map(indirizzo -> {
                     indirizzo.setVia(indirizzoDetails.getVia());

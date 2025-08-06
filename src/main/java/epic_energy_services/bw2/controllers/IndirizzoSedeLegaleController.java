@@ -28,8 +28,7 @@ public class IndirizzoSedeLegaleController {
 
     @GetMapping("/{id}")
     public IndirizzoSedeLegale getById(@PathVariable Long id) {
-        return service.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("sede legale non trovata"));
+        return service.findById(id);
     }
 
 }
