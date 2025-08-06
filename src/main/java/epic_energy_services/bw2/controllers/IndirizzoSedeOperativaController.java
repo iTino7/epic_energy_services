@@ -7,7 +7,6 @@ import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.services.IndirizzoSedeOperativaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,16 +23,11 @@ public class IndirizzoSedeOperativaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> creaNuovaSedeOperativa(@RequestBody @Valid NewIndirizzoDTO dto) {
+    public IndirizzoSedeOperativa creaNuovaSedeOperativa(@RequestBody @Valid NewIndirizzoDTO dto) {
         Comune comune = comuneRepository.findById(dto.comuneId())
-                .orElseThrow(() -> new IllegalArgumentException("comune non trovato"));
+                .orElseThrow(() -> new IllegalArgumentException("Comune non trovato"));
 
-        IndirizzoSedeOperativa nuovo = service.creaNuovaSedeOperativa(dto, comune);
-        return ResponseEntity.ok(nuovo);
+        return service.creaNuovaSedeOperativa(dto, comune);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(service.findAll());
-    }
 }

@@ -1,12 +1,13 @@
 package epic_energy_services.bw2.controllers;
 
+import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
 import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.services.IndirizzoSedeLegaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/sedi-legali")
@@ -21,8 +22,15 @@ public class IndirizzoSedeLegaleController {
         this.comuneRepository = comuneRepository;
     }
 
-    @PostMapping
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(service.findAll());
+    @GetMapping
+    public List<IndirizzoSedeLegale> getAll() {
+        return service.findAll();
     }
+
+    @GetMapping("/{id}")
+    public IndirizzoSedeLegale getById(@PathVariable Long id) {
+        return service.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("sede legale non trovata"));
+    }
+    
 }
