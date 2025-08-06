@@ -24,14 +24,9 @@ public class ClienteService {
         return this.clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente con questo id " + id + " non trovato"));
     }
 
-    public Cliente findByEmail(String email) {
-        return clienteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(email));
-    }
-
-    public Cliente getById(long id) {
-        return clienteRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Cliente non trovato con questo id: " + id));
-    }
+//    public Cliente findByEmail(String email) {
+//        return clienteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException(email));
+//    }
 
     public Cliente createClient(NewClienteDTO payload) {
 
@@ -39,7 +34,8 @@ public class ClienteService {
             throw new BadRequestException("Email già presente: " + payload.email());
         }
 
-        Cliente cliente = new Cliente(payload.ragioneSociale(),
+        Cliente cliente = new Cliente(
+                payload.ragioneSociale(),
                 payload.partitaIva(),
                 payload.email(),
                 LocalDate.now(),
@@ -53,7 +49,7 @@ public class ClienteService {
                 payload.telefonoContatto(),
                 "https://ui-avatars.com/api/?name=" + payload.nomeContatto() + "+" + payload.cognomeContatto()
         );
-        return clienteRepository.save(cliente);
+        return this.clienteRepository.save(cliente);
     }
 
     public Cliente updateClient(Long id, NewClienteDTO update) {
@@ -69,17 +65,21 @@ public class ClienteService {
         cliente.setCognomeContatto(update.cognomeContatto());
         cliente.setTelefonoContatto(update.telefonoContatto());
 
-        return clienteRepository.save(cliente);
+        return this.clienteRepository.save(cliente);
     }
 
     public Page<Cliente> getClient(int pageNumber, int pageSize, String sortBy) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
-        return clienteRepository.findAll(pageable);
+        return this.clienteRepository.findAll(pageable);
     }
 
     public void deleteClient(Long id) {
         Cliente found = this.findById(id);
         this.clienteRepository.delete(found);
+    }
+
+    public Cliente findByName(String nomeContatto) {
+        return this.clienteRepository.findByFirstName(nomeContatto);
     }
 
 
