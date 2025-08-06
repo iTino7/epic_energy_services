@@ -9,13 +9,14 @@ public class StatoFattura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String stato;
+    @Enumerated(EnumType.STRING)
+    private StatoFatturaTypes stato;
 
 
     public StatoFattura() {
     }
 
-    public StatoFattura(String stato) {
+    public StatoFattura(StatoFatturaTypes stato) {
         this.stato = stato;
     }
 
@@ -23,11 +24,11 @@ public class StatoFattura {
         return id;
     }
 
-    public String getStato() {
+    public StatoFatturaTypes getStato() {
         return stato;
     }
 
-    public void setStato(String stato) {
+    public void setStato(StatoFatturaTypes stato) {
         this.stato = stato;
     }
 
@@ -35,7 +36,7 @@ public class StatoFattura {
     public String toString() {
         return "StatoFattura{" +
                 "id=" + id +
-                ", stato='" + stato + '\'' +
+                ", stato=" + stato +
                 '}';
     }
 }

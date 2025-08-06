@@ -9,6 +9,7 @@ public class ValidationException extends RuntimeException {
     public ValidationException(String errorMessages) {
         super(errorMessages);
     }
+
     public ValidationException(List<String> errorMessages) {
         super("Validation Errors");
         this.errorMessages = errorMessages;
