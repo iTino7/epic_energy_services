@@ -2,7 +2,6 @@ package epic_energy_services.bw2.controllers;
 
 import epic_energy_services.bw2.entities.User;
 import epic_energy_services.bw2.payloads.NewUserDTO;
-import epic_energy_services.bw2.payloads.NewUserRespDTO;
 import epic_energy_services.bw2.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,23 +54,28 @@ public class UserController {
     // ENDPOINT ME
 
     @GetMapping("/me")
-    @PreAuthorize("hasAuthority('USER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public User getProfile(@AuthenticationPrincipal User currentAuthenticatedUser) {
         return currentAuthenticatedUser;
     }
 
+
     @PutMapping("/me")
-    @PreAuthorize("hasAuthority('USER', 'ADMIN')")
-    public User updateOwnProfile(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody @Valid NewUserDTO newUserDTO) {
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public User updateOwnProfile(@AuthenticationPrincipal User currentAuthenticatedUser,
+                                 @RequestBody @Valid NewUserDTO newUserDTO) {
         return userService.findByIdAndUpdate(currentAuthenticatedUser.getId(), newUserDTO);
     }
 
 
+
+
     @DeleteMapping("/me")
-    @PreAuthorize("hasAuthority('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMe(@AuthenticationPrincipal User currentAuthenticatedUser) {
         userService.findByIdAndDelete(currentAuthenticatedUser.getId());
     }
+
 
 }

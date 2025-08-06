@@ -20,13 +20,15 @@ public class RuoloController {
     @Autowired
     private UserService userService;
 
+    //Creare un Ruolo
     @PostMapping
     public Ruolo assignRole(@RequestBody @Valid NewRuoloDTO newRuoloDTO) {
         return ruoloService.creaRuolo(newRuoloDTO);
     }
 
+    //Assegnare un ruolo
     @PutMapping("/assign")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String assegnaRuolo(@RequestParam Long userId, @RequestParam String nomeRuolo) {
         userService.assegnaRuoloAUser(userId, nomeRuolo);
         return "Ruolo '" + nomeRuolo + "' assegnato all'utente con ID " + userId;
