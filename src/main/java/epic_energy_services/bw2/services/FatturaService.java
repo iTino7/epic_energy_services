@@ -13,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -71,7 +73,28 @@ public class FatturaService {
         return this.fatturaRepository.findByCliente(found).orElseThrow(()-> new NotFoundException("Nessuna fattura trovata intestata a questo cliente."));
     }
 
+    //https://medium.com/@AlexanderObregon/search-filters-in-spring-boot-apis-without-complex-query-builders-dcb69a0453c9
+    public List<Fattura> searchFattura(StatoFatturaTypes statoFattura, LocalDate data, Integer anno, Double start, Double end){
+        Specification<Fattura> spec = Specification.allOf(((root, query, cb) -> cb.conjunction()));
 
+        if (statoFattura != null){
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("statoFattura"), statoFattura));
+        }
+
+        if (data != null){
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("data"), data));
+        }
+
+        if (anno != null){
+            spec = spec.and((root, query, cb) -> cb.equal(cb.function("year", Integer.class, root.get("data")), anno));
+        }
+
+        if (start != null && end != null){
+            spec = spec.and((root, query, cb) -> cb.between(root.get("importo"), start, end));
+        }
+
+        return this.fatturaRepository.findAll(spec);
+    }
 
 
 
