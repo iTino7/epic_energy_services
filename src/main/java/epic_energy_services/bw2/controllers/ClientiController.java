@@ -31,8 +31,13 @@ public class ClientiController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Cliente getById(@PathVariable long id) {
-        return clienteService.getById(id);
+    public Cliente findById(@PathVariable long id) {
+        return this.clienteService.findById(id);
+    }
+
+    @GetMapping("/search_by_name")
+    public Cliente findByName(@RequestParam String nomeContatto) {
+        return this.clienteService.findByName(nomeContatto);
     }
 
     @PostMapping
@@ -42,7 +47,7 @@ public class ClientiController {
         if (validation.hasErrors()) {
             throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
         } else {
-            return clienteService.createClient(body);
+            return this.clienteService.createClient(body);
         }
     }
 
@@ -57,13 +62,13 @@ public class ClientiController {
                     .orElse("Errore di validazione");
             throw new ValidationException(errorMessages);
         }
-        return clienteService.updateClient(id, body);
+        return this.clienteService.updateClient(id, body);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteClient(@PathVariable long id) {
-        clienteService.deleteClient(id);
+        this.clienteService.deleteClient(id);
     }
 }
