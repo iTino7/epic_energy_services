@@ -2,9 +2,10 @@ package epic_energy_services.bw2.services;
 
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
-import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
+import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,11 @@ public class IndirizzoSedeLegaleService {
     public IndirizzoSedeLegaleService(IndirizzoSedeLegaleRepository indirizzoRepository) {
         this.indirizzoRepository = indirizzoRepository;
     }
+
+    @Autowired
+    private IndirizzoSedeLegaleRepository repository;
+    @Autowired
+    private ComuneRepository comuneRepository;
 
     public List<IndirizzoSedeLegale> findAll() {
         return indirizzoRepository.findAll();
@@ -42,6 +48,16 @@ public class IndirizzoSedeLegaleService {
 
     public Optional<IndirizzoSedeLegale> findByViaAndCivico(String via, String civico) {
         return indirizzoRepository.findByViaAndCivico(via, civico);
+    }
+
+    public IndirizzoSedeLegale crea(NewIndirizzoDTO dto) {
+        Comune comune = comuneRepository.findById(dto.comuneId())
+                .orElseThrow(() -> new EntityNotFoundException("comune non trovato con ID: " + dto.comuneId()));
+
+        IndirizzoSedeLegale indirizzo = new IndirizzoSedeLegale(
+                dto.via(), dto.civico(), dto.località(), dto.cap(), comune
+        );
+        return repository.save(indirizzo);
     }
 
     public IndirizzoSedeLegale update(Long id, IndirizzoSedeLegale indirizzoDetails) {
