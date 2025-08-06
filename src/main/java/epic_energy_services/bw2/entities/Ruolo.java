@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class Ruolo {
     @Column(name = "nome_ruolo")
     private String nomeRuolo;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "ruoli")
     private Set<User> utenti = new HashSet<>();
 
