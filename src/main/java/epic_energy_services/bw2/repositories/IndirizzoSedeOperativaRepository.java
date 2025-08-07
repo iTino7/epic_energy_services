@@ -1,7 +1,9 @@
 package epic_energy_services.bw2.repositories;
 
+import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
 import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,5 +15,7 @@ public interface IndirizzoSedeOperativaRepository extends JpaRepository<Indirizz
 
     Optional<IndirizzoSedeOperativa> findByComune_Denominazione(String denominazione);
 
-    Optional<IndirizzoSedeOperativa> findByViaAndCivico(String via, String civico);
+    @Query("SELECT so FROM IndirizzoSedeOperativa so WHERE so.via = :via AND so.civico = :civico AND so.localita = :localita")
+    Optional<IndirizzoSedeOperativa> findByViaAndCivicoAndLocalita(String via, String civico, String localita);
 }
+

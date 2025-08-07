@@ -30,12 +30,12 @@ public class IndirizzoSedeLegaleService {
         return indirizzoRepository.findById(id).orElseThrow(() -> new NotFoundException("Sede legale con id " + id + " non trovata."));
     }
 
-    public void findByViaAndCivico(String via, String civico) {
-        indirizzoRepository.findByViaAndCivico(via, civico).ifPresent(indirizzo  -> { throw new BadRequestException("Indirizzo in " + via  + " al civico " + civico + " esiste già.");});
+    public void findByViaAndCivicoAndLocalita(String via, String civico, String localita) {
+        indirizzoRepository.findByViaAndCivicoAndLocalita(via, civico, localita).ifPresent(indirizzo  -> { throw new BadRequestException("Indirizzo in " + via  + " al civico " + civico + " esiste già.");});
     }
 
     public IndirizzoSedeLegale crea(NewIndirizzoDTO dto) {
-        this.findByViaAndCivico(dto.via(), dto.civico());
+        this.findByViaAndCivicoAndLocalita(dto.via(), dto.civico(), dto.localita());
         Comune comune = comuneService.findById(dto.comuneId());
 
         IndirizzoSedeLegale indirizzo = new IndirizzoSedeLegale(
@@ -53,19 +53,19 @@ public class IndirizzoSedeLegaleService {
         return indirizzoRepository.findByComune_Denominazione(denominazione);
     }
 
-    public IndirizzoSedeLegale update(Long id, NewIndirizzoDTO newIndirizzoDTO) {
+    public IndirizzoSedeLegale update(Long id, NewIndirizzoDTO payload) {
         //Trovo ID
         IndirizzoSedeLegale found = this.findById(id);
 
         //Cerco Via e Civico
-        this.findByViaAndCivico(newIndirizzoDTO.via(), newIndirizzoDTO.civico());
+        this.findByViaAndCivicoAndLocalita(payload.via(), payload.civico(), payload.localita());
 
-        Comune comune = comuneService.findById(newIndirizzoDTO.comuneId());
+        Comune comune = comuneService.findById(payload.comuneId());
 
-        found.setVia(newIndirizzoDTO.via());
-        found.setCivico(newIndirizzoDTO.civico());
-        found.setLocalita(newIndirizzoDTO.localita());
-        found.setCap(newIndirizzoDTO.cap());
+        found.setVia(payload.via());
+        found.setCivico(payload.civico());
+        found.setLocalita(payload.localita());
+        found.setCap(payload.cap());
         found.setComune(comune);
 
 

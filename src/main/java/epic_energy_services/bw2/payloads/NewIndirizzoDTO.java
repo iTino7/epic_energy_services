@@ -14,6 +14,8 @@ public record NewIndirizzoDTO(
         @NotBlank(message = "Il cap non puo essere vuoto")
         String cap,
         @NotNull(message = "L'id del comune è obbligatorio")
-        Long comuneId
+        Long comuneId,
+        @NotNull(message = "L'id del cliente è obbligatorio")
+        Long clienteId
 ) {
 }

@@ -9,21 +9,25 @@ public class IndirizzoSedeOperativa {
     private Long id;
     private String via;
     private String civico;
-    private String località;
+    private String localita;
     private String cap;
 
     @ManyToOne
     private Comune comune;
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
     private IndirizzoSedeOperativa() {
     }
 
-    public IndirizzoSedeOperativa(String via, String civico, String località, String cap, Comune comune) {
+    public IndirizzoSedeOperativa(String via, String civico, String localita, String cap, Comune comune, Cliente cliente) {
         this.via = via;
         this.civico = civico;
-        this.località = località;
+        this.localita = localita;
         this.cap = cap;
         this.comune = comune;
+        this.cliente = cliente;
     }
 
     public Long getId() {
@@ -46,12 +50,20 @@ public class IndirizzoSedeOperativa {
         this.civico = civico;
     }
 
-    public String getLocalità() {
-        return località;
+    public String getLocalita() {
+        return localita;
     }
 
-    public void setLocalità(String località) {
-        this.località = località;
+    public void setLocalita(String localita) {
+        this.localita = localita;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public String getCap() {

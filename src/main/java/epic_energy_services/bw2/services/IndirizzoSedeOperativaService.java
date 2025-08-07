@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.services;
 
+import epic_energy_services.bw2.entities.Cliente;
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
 import epic_energy_services.bw2.exception.BadRequestException;
@@ -20,6 +21,9 @@ public class IndirizzoSedeOperativaService {
     @Autowired
     private ComuneService comuneService;
 
+    @Autowired
+    private ClienteService clienteService;
+
     public List<IndirizzoSedeOperativa> findAll() {
         return repository.findAll();
     }
@@ -28,32 +32,21 @@ public class IndirizzoSedeOperativaService {
         return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Sede Operativa non trovata"));
     }
 
-    public IndirizzoSedeOperativa save(NewIndirizzoDTO dto) {
-        Comune comune = comuneService.findById(dto.comuneId());
-
-        IndirizzoSedeOperativa indirizzo = new IndirizzoSedeOperativa(
-                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune
-        );
-        return repository.save(indirizzo);
+    public void findByViaAndCivicoAndLocalita(String via, String civico, String localita) {
+        this.repository.findByViaAndCivicoAndLocalita(via, civico, localita).ifPresent(indirizzo  -> { throw new BadRequestException("Indirizzo in " + via  + " al civico " + civico + " esiste già.");});
     }
 
-    public void findByViaAndCivico(String via, String civico) {
-        repository.findByViaAndCivico(via, civico).ifPresent(indirizzo -> {
-            throw new BadRequestException("Indirizzo in " + via + " al civico " + civico + " esiste già");
-        });
-    }
-
-    public IndirizzoSedeOperativa update(Long id, NewIndirizzoDTO newIndirizzoDTO) {
+    public IndirizzoSedeOperativa update(Long id, NewIndirizzoDTO payload) {
         IndirizzoSedeOperativa found = this.findById(id);
 
-        this.findByViaAndCivico(newIndirizzoDTO.via(), newIndirizzoDTO.civico());
+        this.findByViaAndCivicoAndLocalita(payload.via(), payload.civico(), payload.localita());
 
-        Comune comune = comuneService.findById(newIndirizzoDTO.comuneId());
+        Comune comune = comuneService.findById(payload.comuneId());
 
-        found.setVia(newIndirizzoDTO.via());
-        found.setCivico(newIndirizzoDTO.civico());
-        found.setLocalità(newIndirizzoDTO.localita());
-        found.setCap(newIndirizzoDTO.cap());
+        found.setVia(payload.via());
+        found.setCivico(payload.civico());
+        found.setLocalita(payload.localita());
+        found.setCap(payload.cap());
         found.setComune(comune);
 
         return repository.save(found);
@@ -64,15 +57,12 @@ public class IndirizzoSedeOperativaService {
     }
 
     public IndirizzoSedeOperativa creaNuovaSedeOperativa(NewIndirizzoDTO dto) {
+        this.findByViaAndCivicoAndLocalita(dto.via(), dto.civico(), dto.localita());
         Comune comune = comuneService.findById(dto.comuneId());
-
-        boolean esiste = repository.findByViaAndCivico(dto.via(), dto.civico()).isPresent();
-        if (esiste) {
-            throw new IllegalArgumentException("L'indirizzo della sede operativa già esiste");
-        }
+        Cliente cliente = this.clienteService.findById(dto.clienteId());
 
         IndirizzoSedeOperativa nuova = new IndirizzoSedeOperativa(
-                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune
+                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune, cliente
         );
 
         return repository.save(nuova);
