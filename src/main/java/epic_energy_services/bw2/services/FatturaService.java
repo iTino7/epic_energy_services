@@ -31,11 +31,7 @@ public class FatturaService {
     @Autowired
     private ClienteService clienteService;
 
-    public Page<Fattura> findAllFatture(int pageNum, int pageSize, String sortBy){
-        if (pageSize > 50) pageSize = 50;
-        Pageable pageable = PageRequest.of(pageNum,pageSize, Sort.by(sortBy));
-        return this.fatturaRepository.findAll(pageable);
-    }
+
 
     public Fattura findById(long id){
         return this.fatturaRepository.findById(id).orElseThrow(()-> new NotFoundException("Fattura con id " + id + " non trovata."));
@@ -52,6 +48,7 @@ public class FatturaService {
     }
 
     public Fattura findByIdAndUpdate(NewFatturaDTO payload, long id){
+        if (this.fatturaRepository.findByNumero(payload.numero()).isPresent()) throw new BadRequestException("Numero fattura " + payload.numero() + " già esistente.");
         Fattura found = this.findById(id);
         Cliente cliente = this.clienteService.findById(payload.clienteId());
         StatoFattura stato = this.statoFatturaService.checkStato(payload.statoFattura());
@@ -75,8 +72,11 @@ public class FatturaService {
     }
 
     //https://medium.com/@AlexanderObregon/search-filters-in-spring-boot-apis-without-complex-query-builders-dcb69a0453c9
-    public List<Fattura> searchFattura(String stato, LocalDate data, Integer anno, Double start, Double end){
+    public Page<Fattura> searchFattura(int pageNum, int pageSize, String sortBy, String stato, LocalDate data, Integer anno, Double start, Double end, Long clienteId){
         Specification<Fattura> spec = Specification.allOf(((root, query, cb) -> cb.conjunction()));
+        if (pageSize > 50) pageSize = 50;
+        Pageable pageable = PageRequest.of(pageNum,pageSize, Sort.by(sortBy));
+
 
         if (stato != null){
             spec = spec.and((root, query, cb) -> {
@@ -99,15 +99,14 @@ public class FatturaService {
             spec = spec.and((root, query, cb) -> cb.between(root.get("importo"), start, end));
         }
 
-        return this.fatturaRepository.findAll(spec);
+        if (clienteId != null){
+            Cliente found = this.clienteService.findById(clienteId);
+            spec = spec.and((root, query, cb) -> {
+                Join<Fattura, Cliente> fatturaClienteJoin = root.join("cliente");
+                return cb.equal(fatturaClienteJoin.get("id"), clienteId);
+            });
+        }
+
+        return this.fatturaRepository.findAll(spec,pageable);
     }
-
-
-
-
-
-
-
-
-
 }
