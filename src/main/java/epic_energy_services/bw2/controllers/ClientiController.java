@@ -6,7 +6,6 @@ import epic_energy_services.bw2.exception.ValidationException;
 import epic_energy_services.bw2.payloads.NewClienteDTO;
 import epic_energy_services.bw2.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,12 +55,7 @@ public class ClientiController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public Cliente updateClient(@PathVariable long id, @RequestBody @Validated NewClienteDTO body, BindingResult validation) {
         if (validation.hasErrors()) {
-            String errorMessages = validation.getAllErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .reduce((message1, message2) -> message1 + "," + message2)
-                    .orElse("Errore di validazione");
-            throw new ValidationException(errorMessages);
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
         }
         return this.clienteService.updateClient(id, body);
     }

@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
 
 @RestController
@@ -36,7 +35,7 @@ public class IndirizzoSedeLegaleController {
 
     @PostMapping
     @PreAuthorize(("hasAuthority('ADMIN')"))
-    public NewIDRespDTO create(@RequestBody @Validated NewIndirizzoDTO payload, BindingResult validation){
+    public NewIDRespDTO create(@RequestBody @Validated NewIndirizzoDTO payload, BindingResult validation) {
         if (validation.hasErrors()) {
             throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
         } else {
@@ -44,6 +43,7 @@ public class IndirizzoSedeLegaleController {
             return new NewIDRespDTO(newIndirizzo.getId());
         }
     }
+
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
