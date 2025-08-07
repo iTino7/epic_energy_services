@@ -88,11 +88,16 @@ public class UserService {
 
     public void assegnaRuoloAUser(Long userId, String nomeRuolo) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+                .orElseThrow(() -> new BadRequestException("Utente non trovato"));
 
-        Ruolo ruolo = ruoloRepository.findByNomeRuolo(nomeRuolo)
-                .orElseThrow(() -> new RuntimeException("Ruolo non trovato"));
+        Ruolo ruolo = ruoloRepository.findByNomeRuolo(nomeRuolo.toUpperCase())
+                .orElseThrow(() -> new BadRequestException("Ruolo non trovato"));
 
+        for( Ruolo role : user.getRuoli()){
+            if (role.equals(ruolo)) {
+                throw new BadRequestException("Questo utente ha già il ruolo "+ ruolo.getNomeRuolo() + ".");
+            }
+        }
 
         user.getRuoli().add(ruolo);
 

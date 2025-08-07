@@ -35,4 +35,11 @@ public class Ruolo {
     public Ruolo(String nomeRuolo) {
         this.nomeRuolo = nomeRuolo;
     }
+
+    @Override
+    public String toString() {
+        return "Ruolo{" +
+                "id=" + id +
+                ", nomeRuolo='" + nomeRuolo;
+    }
 }
