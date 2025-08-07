@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FatturaService {
@@ -45,8 +46,12 @@ public class FatturaService {
     }
 
     public Fattura findByIdAndUpdate(NewFatturaDTO payload, long id){
-        if (this.fatturaRepository.findByNumero(payload.numero()).isPresent()) throw new BadRequestException("Numero fattura " + payload.numero() + " già esistente.");
+        Optional<Fattura> foundByNum = this.fatturaRepository.findByNumero(payload.numero());
+        if (foundByNum.get().getId() != id){
+            throw new BadRequestException("Numero fattura " + payload.numero() + " già esistente.");
+        }
         Fattura found = this.findById(id);
+        
         Cliente cliente = this.clienteService.findById(payload.clienteId());
         StatoFattura stato = this.statoFatturaService.checkStato(payload.statoFattura());
         found.setData(payload.date());
