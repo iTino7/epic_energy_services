@@ -8,6 +8,7 @@ import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.exception.NotFoundException;
 import epic_energy_services.bw2.payloads.NewFatturaDTO;
 import epic_energy_services.bw2.repositories.FatturaRepository;
+import jakarta.persistence.criteria.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,11 +75,14 @@ public class FatturaService {
     }
 
     //https://medium.com/@AlexanderObregon/search-filters-in-spring-boot-apis-without-complex-query-builders-dcb69a0453c9
-    public List<Fattura> searchFattura(StatoFatturaTypes statoFattura, LocalDate data, Integer anno, Double start, Double end){
+    public List<Fattura> searchFattura(String stato, LocalDate data, Integer anno, Double start, Double end){
         Specification<Fattura> spec = Specification.allOf(((root, query, cb) -> cb.conjunction()));
 
-        if (statoFattura != null){
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("statoFattura"), statoFattura));
+        if (stato != null){
+            spec = spec.and((root, query, cb) -> {
+                Join<StatoFattura, Fattura> fatturaJoin = root.join("statoFattura");
+                return cb.equal(fatturaJoin.get("stato"), stato.toUpperCase());
+            });
         }
 
         if (data != null){
@@ -86,7 +90,9 @@ public class FatturaService {
         }
 
         if (anno != null){
-            spec = spec.and((root, query, cb) -> cb.equal(cb.function("year", Integer.class, root.get("data")), anno));
+            LocalDate startDate = LocalDate.of(anno, 1,1);
+            LocalDate endDate = LocalDate.of(anno, 12,31);
+            spec = spec.and((root, query, cb) -> cb.between(root.get("data"), startDate, endDate));
         }
 
         if (start != null && end != null){

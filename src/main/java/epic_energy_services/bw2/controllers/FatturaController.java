@@ -71,7 +71,7 @@ public class FatturaController {
 
     @GetMapping("/search")
     public List<Fattura> searchFatture(
-            @RequestParam(required = false)StatoFatturaTypes statoFattura,
+            @RequestParam(required = false)String statoFattura,
             @RequestParam(required = false) LocalDate data,
             @RequestParam(required = false) Integer anno,
             @RequestParam(required = false) Double start,
