@@ -1,9 +1,6 @@
 package epic_energy_services.bw2.services;
 
-import epic_energy_services.bw2.entities.Cliente;
-import epic_energy_services.bw2.entities.Fattura;
-import epic_energy_services.bw2.entities.StatoFattura;
-import epic_energy_services.bw2.entities.StatoFatturaTypes;
+import epic_energy_services.bw2.entities.*;
 import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.exception.NotFoundException;
 import epic_energy_services.bw2.payloads.NewFatturaDTO;
@@ -75,8 +72,6 @@ public class FatturaService {
     public Page<Fattura> searchFattura(int pageNum, int pageSize, String sortBy, String stato, LocalDate data, Integer anno, Double start, Double end, Long clienteId){
         Specification<Fattura> spec = Specification.allOf(((root, query, cb) -> cb.conjunction()));
         if (pageSize > 50) pageSize = 50;
-        Pageable pageable = PageRequest.of(pageNum,pageSize, Sort.by(sortBy));
-
 
         if (stato != null){
             spec = spec.and((root, query, cb) -> {
@@ -107,6 +102,23 @@ public class FatturaService {
             });
         }
 
+        Pageable pageable;
+
+        if (sortBy.equalsIgnoreCase("provincia")){
+            pageable = PageRequest.of(pageNum,pageSize);
+            spec = spec.and((root, query, cb) -> {
+                Join<Fattura, Cliente> fatturaClienteJoin = root.join("cliente");
+                Join<Cliente, IndirizzoSedeLegale> clienteSedeLegaleJoin = fatturaClienteJoin.join("sedeLegale");
+                Join<IndirizzoSedeLegale, Comune> sedeLegaleComuneJoin = clienteSedeLegaleJoin.join("comune");
+                Join<Comune, Provincia> comuneProvinciaJoin = sedeLegaleComuneJoin.join("provincia");
+
+                query.orderBy(cb.asc(comuneProvinciaJoin.get("provincia")));
+
+                return cb.conjunction();
+            });
+        } else {
+            pageable = PageRequest.of(pageNum,pageSize, Sort.by(sortBy));
+        }
         return this.fatturaRepository.findAll(spec,pageable);
     }
 }
