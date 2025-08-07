@@ -1,4 +1,4 @@
 package epic_energy_services.bw2.payloads;
 
-public record NewFatturaRespDTO(long id) {
+public record NewIDRespDTO(long id) {
 }

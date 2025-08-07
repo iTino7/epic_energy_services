@@ -3,6 +3,7 @@ package epic_energy_services.bw2.services;
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
 import epic_energy_services.bw2.exception.BadRequestException;
+import epic_energy_services.bw2.exception.NotFoundException;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
 import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
@@ -26,14 +27,19 @@ public class IndirizzoSedeLegaleService {
     }
 
     public IndirizzoSedeLegale findById(Long id) {
-        return indirizzoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("sede legale non trovata"));
+        return indirizzoRepository.findById(id).orElseThrow(() -> new NotFoundException("Sede legale con id " + id + " non trovata."));
+    }
+
+    public void findByViaAndCivico(String via, String civico) {
+        indirizzoRepository.findByViaAndCivico(via, civico).ifPresent(indirizzo  -> { throw new BadRequestException("Indirizzo in " + via  + " al civico " + civico + " esiste già.");});
     }
 
     public IndirizzoSedeLegale crea(NewIndirizzoDTO dto) {
+        this.findByViaAndCivico(dto.via(), dto.civico());
         Comune comune = comuneService.findById(dto.comuneId());
 
         IndirizzoSedeLegale indirizzo = new IndirizzoSedeLegale(
-                dto.via(), dto.civico(), dto.località(), dto.cap(), comune
+                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune
         );
         return indirizzoRepository.save(indirizzo);
     }
@@ -47,10 +53,6 @@ public class IndirizzoSedeLegaleService {
         return indirizzoRepository.findByComune_Denominazione(denominazione);
     }
 
-    public void findByViaAndCivico(String via, String civico) {
-        indirizzoRepository.findByViaAndCivico(via, civico).ifPresent(Indirizzo  -> { throw new BadRequestException("Indirizzo in " +via  + "al civico " +civico + "esiste già ");});
-    }
-
     public IndirizzoSedeLegale update(Long id, NewIndirizzoDTO newIndirizzoDTO) {
         //Trovo ID
         IndirizzoSedeLegale found = this.findById(id);
@@ -62,7 +64,7 @@ public class IndirizzoSedeLegaleService {
 
         found.setVia(newIndirizzoDTO.via());
         found.setCivico(newIndirizzoDTO.civico());
-        found.setLocalità(newIndirizzoDTO.località());
+        found.setLocalita(newIndirizzoDTO.localita());
         found.setCap(newIndirizzoDTO.cap());
         found.setComune(comune);
 
