@@ -14,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/clienti")
 public class ClientiController {
@@ -25,19 +27,18 @@ public class ClientiController {
     public Page<Cliente> getAllClient(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
-            @RequestParam(defaultValue = "id") String sort_by) {
-        return this.clienteService.getClient(page, size, sort_by);
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) Double fatturatoAnnuale,
+            @RequestParam(required = false) LocalDate dataInserimento,
+            @RequestParam(required = false) LocalDate ultimoContatto,
+            @RequestParam(required = false) String partialName) {
+        return this.clienteService.searchCliente(page, size, sortBy, fatturatoAnnuale, dataInserimento, ultimoContatto, partialName);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Cliente findById(@PathVariable long id) {
         return this.clienteService.findById(id);
-    }
-
-    @GetMapping("/search_by_name")
-    public Cliente findByName(@RequestParam String nomeContatto) {
-        return this.clienteService.findByName(nomeContatto);
     }
 
     @PostMapping
