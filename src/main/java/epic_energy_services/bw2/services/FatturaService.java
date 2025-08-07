@@ -8,13 +8,16 @@ import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.exception.NotFoundException;
 import epic_energy_services.bw2.payloads.NewFatturaDTO;
 import epic_energy_services.bw2.repositories.FatturaRepository;
+import jakarta.persistence.criteria.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -71,7 +74,33 @@ public class FatturaService {
         return this.fatturaRepository.findByCliente(found).orElseThrow(()-> new NotFoundException("Nessuna fattura trovata intestata a questo cliente."));
     }
 
+    //https://medium.com/@AlexanderObregon/search-filters-in-spring-boot-apis-without-complex-query-builders-dcb69a0453c9
+    public List<Fattura> searchFattura(String stato, LocalDate data, Integer anno, Double start, Double end){
+        Specification<Fattura> spec = Specification.allOf(((root, query, cb) -> cb.conjunction()));
 
+        if (stato != null){
+            spec = spec.and((root, query, cb) -> {
+                Join<StatoFattura, Fattura> fatturaJoin = root.join("statoFattura");
+                return cb.equal(fatturaJoin.get("stato"), stato.toUpperCase());
+            });
+        }
+
+        if (data != null){
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("data"), data));
+        }
+
+        if (anno != null){
+            LocalDate startDate = LocalDate.of(anno, 1,1);
+            LocalDate endDate = LocalDate.of(anno, 12,31);
+            spec = spec.and((root, query, cb) -> cb.between(root.get("data"), startDate, endDate));
+        }
+
+        if (start != null && end != null){
+            spec = spec.and((root, query, cb) -> cb.between(root.get("importo"), start, end));
+        }
+
+        return this.fatturaRepository.findAll(spec);
+    }
 
 
 

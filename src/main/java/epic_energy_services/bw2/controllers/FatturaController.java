@@ -2,18 +2,21 @@ package epic_energy_services.bw2.controllers;
 
 
 import epic_energy_services.bw2.entities.Fattura;
+import epic_energy_services.bw2.entities.StatoFatturaTypes;
 import epic_energy_services.bw2.exception.ValidationException;
 import epic_energy_services.bw2.payloads.NewFatturaDTO;
 import epic_energy_services.bw2.payloads.NewFatturaRespDTO;
 import epic_energy_services.bw2.services.FatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -64,5 +67,16 @@ public class FatturaController {
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public List<Fattura> findAllFattureByCliente(@PathVariable("clienteId") long clienteId){
         return this.fatturaService.findFattureByCliente(clienteId);
+    }
+
+    @GetMapping("/search")
+    public List<Fattura> searchFatture(
+            @RequestParam(required = false)String statoFattura,
+            @RequestParam(required = false) LocalDate data,
+            @RequestParam(required = false) Integer anno,
+            @RequestParam(required = false) Double start,
+            @RequestParam(required = false) Double end
+            ){
+        return this.fatturaService.searchFattura(statoFattura, data, anno, start, end);
     }
 }
