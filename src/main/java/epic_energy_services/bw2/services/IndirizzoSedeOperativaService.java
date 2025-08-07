@@ -2,10 +2,9 @@ package epic_energy_services.bw2.services;
 
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
+import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
-import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeOperativaRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,31 +18,45 @@ public class IndirizzoSedeOperativaService {
     private IndirizzoSedeOperativaRepository repository;
 
     @Autowired
-    private ComuneRepository comuneRepository;
+    private ComuneService comuneService;
 
     public List<IndirizzoSedeOperativa> findAll() {
         return repository.findAll();
     }
 
-    public Optional<IndirizzoSedeOperativa> findById(Long id) {
-        return repository.findById(id);
+    public IndirizzoSedeOperativa findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Sede Operativa non trovata"));
     }
 
-    public IndirizzoSedeOperativa save(IndirizzoSedeOperativa indirizzo) {
+    public IndirizzoSedeOperativa save(NewIndirizzoDTO dto) {
+        Comune comune = comuneService.findById(dto.comuneId());
+
+        IndirizzoSedeOperativa indirizzo = new IndirizzoSedeOperativa(
+                dto.via(), dto.civico(), dto.località(), dto.cap(), comune
+        );
         return repository.save(indirizzo);
     }
 
-    public IndirizzoSedeOperativa update(Long id, IndirizzoSedeOperativa dettagli) {
-        return repository.findById(id)
-                .map(existing -> {
-                    existing.setVia(dettagli.getVia());
-                    existing.setCivico(dettagli.getCivico());
-                    existing.setLocalità(dettagli.getLocalità());
-                    existing.setCap(dettagli.getCap());
-                    existing.setComune(dettagli.getComune());
-                    return repository.save(existing);
-                })
-                .orElseThrow(() -> new RuntimeException("Indirizzo sede operativa non trovato con ID: " + id));
+    public void findByViaAndCivico(String via, String civico) {
+        repository.findByViaAndCivico(via, civico).ifPresent(indirizzo -> {
+            throw new BadRequestException("Indirizzo in " + via + " al civico " + civico + " esiste già");
+        });
+    }
+
+    public IndirizzoSedeOperativa update(Long id, NewIndirizzoDTO newIndirizzoDTO) {
+        IndirizzoSedeOperativa found = this.findById(id);
+
+        this.findByViaAndCivico(newIndirizzoDTO.via(), newIndirizzoDTO.civico());
+
+        Comune comune = comuneService.findById(newIndirizzoDTO.comuneId());
+
+        found.setVia(newIndirizzoDTO.via());
+        found.setCivico(newIndirizzoDTO.civico());
+        found.setLocalità(newIndirizzoDTO.località());
+        found.setCap(newIndirizzoDTO.cap());
+        found.setComune(comune);
+
+        return repository.save(found);
     }
 
     public void delete(Long id) {
@@ -51,8 +64,7 @@ public class IndirizzoSedeOperativaService {
     }
 
     public IndirizzoSedeOperativa creaNuovaSedeOperativa(NewIndirizzoDTO dto) {
-        Comune comune = comuneRepository.findById(dto.comuneId())
-                .orElseThrow(() -> new EntityNotFoundException("Comune non trovato con ID: " + dto.comuneId()));
+        Comune comune = comuneService.findById(dto.comuneId());
 
         boolean esiste = repository.findByViaAndCivico(dto.via(), dto.civico()).isPresent();
         if (esiste) {
@@ -66,7 +78,6 @@ public class IndirizzoSedeOperativaService {
         return repository.save(nuova);
     }
 
-
     public List<IndirizzoSedeOperativa> findByCap(String cap) {
         return repository.findByCap(cap);
     }
@@ -75,7 +86,5 @@ public class IndirizzoSedeOperativaService {
         return repository.findByComune_Denominazione(denominazione);
     }
 
-    public Optional<IndirizzoSedeOperativa> findByViaAndCivico(String via, String civico) {
-        return repository.findByViaAndCivico(via, civico);
-    }
 }
+
