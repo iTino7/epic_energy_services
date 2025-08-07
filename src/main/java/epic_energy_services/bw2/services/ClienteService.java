@@ -78,8 +78,16 @@ public class ClienteService {
         this.clienteRepository.delete(found);
     }
 
-    public Cliente findByName(String nomeContatto) {
-        return this.clienteRepository.findByFirstName(nomeContatto);
+    public Cliente findByFatturato(Double fatturatoAnnuale) {
+        return this.clienteRepository.findByfatturatoAnnuale(fatturatoAnnuale);
+    }
+
+    public Cliente findByDataInserimento(LocalDate dataInserimento) {
+        return this.clienteRepository.findByDataInserimento(dataInserimento);
+    }
+
+    public Cliente findByUltimoContratto(LocalDate ultimoContratto) {
+        return this.findByUltimoContratto(ultimoContratto);
     }
 
 

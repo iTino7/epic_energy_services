@@ -14,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/clienti")
 public class ClientiController {
@@ -35,9 +37,19 @@ public class ClientiController {
         return this.clienteService.findById(id);
     }
 
-    @GetMapping("/search_by_name")
-    public Cliente findByName(@RequestParam String nomeContatto) {
-        return this.clienteService.findByName(nomeContatto);
+    @GetMapping("/search_by_ultimo_contratto")
+    public Cliente findByUltimoContratto(@RequestParam LocalDate ultimoContratto) {
+        return this.clienteService.findByUltimoContratto(ultimoContratto);
+    }
+
+    @GetMapping("/search_by_fatturato")
+    public Cliente findByFatturatoAnnuale(@RequestParam Double fatturatoAnnuale) {
+        return this.clienteService.findByFatturato(fatturatoAnnuale);
+    }
+
+    @GetMapping("/data_inserimento")
+    public Cliente findByData(@RequestParam LocalDate dataInserimento) {
+        return this.clienteService.findByDataInserimento(dataInserimento);
     }
 
     @PostMapping
