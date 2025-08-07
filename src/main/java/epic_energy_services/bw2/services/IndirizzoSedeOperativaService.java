@@ -60,7 +60,7 @@ public class IndirizzoSedeOperativaService {
         }
 
         IndirizzoSedeOperativa nuova = new IndirizzoSedeOperativa(
-                dto.via(), dto.civico(), dto.località(), dto.cap(), comune
+                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune
         );
 
         return repository.save(nuova);
