@@ -15,10 +15,10 @@ public class Cliente {
     private long id;
 
     private String ragioneSociale;
-    private int partitaIva;
+    private long partitaIva;
     private String email;
     private LocalDate dataInserimento;
-    private LocalDate dataUltimoContratto;
+    private LocalDate dataUltimoContatto;
     private double fatturatoAnnuale;
     private String pec;
     private String telefono;
@@ -29,18 +29,18 @@ public class Cliente {
     private String logoAziendale;
     @OneToOne
     private IndirizzoSedeLegale sedeLegale;
-    @OneToMany
+    @OneToMany(mappedBy = "cliente")
     private List<IndirizzoSedeOperativa> sediOperative;
 
     public Cliente() {
     }
 
-    public Cliente(String ragioneSociale, int partitaIva, String email, LocalDate dataInserimento, LocalDate dataUltimoContratto, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String nomeContatto, String cognomeContatto, String telefonoContatto, String logoAziendale) {
+    public Cliente(String ragioneSociale, long partitaIva, String email, LocalDate dataInserimento, LocalDate dataUltimoContatto, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String nomeContatto, String cognomeContatto, String telefonoContatto, IndirizzoSedeLegale sedeLegale) {
         this.ragioneSociale = ragioneSociale;
         this.partitaIva = partitaIva;
         this.email = email;
         this.dataInserimento = dataInserimento;
-        this.dataUltimoContratto = dataUltimoContratto;
+        this.dataUltimoContatto = dataUltimoContatto;
         this.fatturatoAnnuale = fatturatoAnnuale;
         this.pec = pec;
         this.telefono = telefono;
@@ -48,7 +48,8 @@ public class Cliente {
         this.nomeContatto = nomeContatto;
         this.cognomeContatto = cognomeContatto;
         this.telefonoContatto = telefonoContatto;
-        this.logoAziendale = logoAziendale;
+        this.logoAziendale = "https://ui-avatars.com/api/?name=" + nomeContatto + "+" + cognomeContatto;
+        this.sedeLegale = sedeLegale;
     }
 
     public IndirizzoSedeLegale getSedeLegale() {
@@ -79,11 +80,11 @@ public class Cliente {
         this.ragioneSociale = ragioneSociale;
     }
 
-    public int getPartitaIva() {
+    public long getPartitaIva() {
         return partitaIva;
     }
 
-    public void setPartitaIva(int partitaIva) {
+    public void setPartitaIva(long partitaIva) {
         this.partitaIva = partitaIva;
     }
 
@@ -103,12 +104,12 @@ public class Cliente {
         this.dataInserimento = dataInserimento;
     }
 
-    public LocalDate getDataUltimoContratto() {
-        return dataUltimoContratto;
+    public LocalDate getDataUltimoContatto() {
+        return dataUltimoContatto;
     }
 
-    public void setDataUltimoContratto(LocalDate dataUltimoContratto) {
-        this.dataUltimoContratto = dataUltimoContratto;
+    public void setDataUltimoContatto(LocalDate dataUltimoContatto) {
+        this.dataUltimoContatto = dataUltimoContatto;
     }
 
     public double getFatturatoAnnuale() {
@@ -183,7 +184,7 @@ public class Cliente {
                 ", partitaIva=" + partitaIva +
                 ", email='" + email + '\'' +
                 ", dataInserimento=" + dataInserimento +
-                ", dataUltimoContratto=" + dataUltimoContratto +
+                ", dataUltimoContatto=" + dataUltimoContatto +
                 ", fatturatoAnnuale=" + fatturatoAnnuale +
                 ", pec='" + pec + '\'' +
                 ", telefono='" + telefono + '\'' +
