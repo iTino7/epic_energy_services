@@ -27,29 +27,18 @@ public class ClientiController {
     public Page<Cliente> getAllClient(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
-            @RequestParam(defaultValue = "id") String sort_by) {
-        return this.clienteService.getClient(page, size, sort_by);
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) Double fatturatoAnnuale,
+            @RequestParam(required = false) LocalDate dataInserimento,
+            @RequestParam(required = false) LocalDate ultimoContatto,
+            @RequestParam(required = false) String partialName) {
+        return this.clienteService.searchCliente(page, size, sortBy, fatturatoAnnuale, dataInserimento, ultimoContatto, partialName);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Cliente findById(@PathVariable long id) {
         return this.clienteService.findById(id);
-    }
-
-    @GetMapping("/search_by_ultimo_contratto")
-    public Cliente findByUltimoContratto(@RequestParam LocalDate ultimoContratto) {
-        return this.clienteService.findByUltimoContratto(ultimoContratto);
-    }
-
-    @GetMapping("/search_by_fatturato")
-    public Cliente findByFatturatoAnnuale(@RequestParam Double fatturatoAnnuale) {
-        return this.clienteService.findByFatturato(fatturatoAnnuale);
-    }
-
-    @GetMapping("/data_inserimento")
-    public Cliente findByData(@RequestParam LocalDate dataInserimento) {
-        return this.clienteService.findByDataInserimento(dataInserimento);
     }
 
     @PostMapping
