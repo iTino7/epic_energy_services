@@ -2,6 +2,7 @@ package epic_energy_services.bw2.controllers;
 
 import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
 import epic_energy_services.bw2.exception.ValidationException;
+import epic_energy_services.bw2.payloads.NewIDRespDTO;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
 import epic_energy_services.bw2.services.IndirizzoSedeLegaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +23,43 @@ public class IndirizzoSedeLegaleController {
     private IndirizzoSedeLegaleService service;
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public List<IndirizzoSedeLegale> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public IndirizzoSedeLegale getById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public IndirizzoSedeLegale update(@PathVariable Long id, @RequestBody @Validated NewIndirizzoDTO newIndirizzoDTO, BindingResult validation) {
+    @PostMapping
+    @PreAuthorize(("hasAuthority('ADMIN')"))
+    public NewIDRespDTO create(@RequestBody @Validated NewIndirizzoDTO payload, BindingResult validation){
         if (validation.hasErrors()) {
             throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
         } else {
-            return service.update(id, newIndirizzoDTO);
+            IndirizzoSedeLegale newIndirizzo = this.service.crea(payload);
+            return new NewIDRespDTO(newIndirizzo.getId());
         }
+    }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public NewIDRespDTO update(@PathVariable Long id, @RequestBody @Validated NewIndirizzoDTO newIndirizzoDTO, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+        } else {
+            IndirizzoSedeLegale updatedIndirizzo = service.update(id, newIndirizzoDTO);
+            return new NewIDRespDTO(updatedIndirizzo.getId());
         }
+    }
 
-        @DeleteMapping("/{id}")
-        @PreAuthorize("hasAuthority('ADMIN')")
-        @ResponseStatus(HttpStatus.NO_CONTENT)
-        public void deleteSede(@PathVariable Long id) {
-            service.delete(id);
-
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteSede(@PathVariable Long id) {
+        service.delete(id);
     }
 }

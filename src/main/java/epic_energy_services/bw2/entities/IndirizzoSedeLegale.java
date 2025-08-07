@@ -9,7 +9,7 @@ public class IndirizzoSedeLegale {
     private Long id;
     private String via;
     private String civico;
-    private String località;
+    private String localita;
     private String cap;
 
     @ManyToOne
@@ -18,10 +18,10 @@ public class IndirizzoSedeLegale {
     private IndirizzoSedeLegale() {
     }
 
-    public IndirizzoSedeLegale(String via, String civico, String località, String cap, Comune comune) {
+    public IndirizzoSedeLegale(String via, String civico, String localita, String cap, Comune comune) {
         this.via = via;
         this.civico = civico;
-        this.località = località;
+        this.localita = localita;
         this.cap = cap;
         this.comune = comune;
     }
@@ -46,12 +46,12 @@ public class IndirizzoSedeLegale {
         this.civico = civico;
     }
 
-    public String getLocalità() {
-        return località;
+    public String getLocalita() {
+        return localita;
     }
 
-    public void setLocalità(String località) {
-        this.località = località;
+    public void setLocalita(String localita) {
+        this.localita = localita;
     }
 
     public String getCap() {
