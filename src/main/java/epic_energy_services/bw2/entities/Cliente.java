@@ -29,8 +29,6 @@ public class Cliente {
     private String logoAziendale;
     @OneToOne
     private IndirizzoSedeLegale sedeLegale;
-    @OneToMany(mappedBy = "cliente")
-    private List<IndirizzoSedeOperativa> sediOperative;
 
     public Cliente() {
     }
@@ -58,14 +56,6 @@ public class Cliente {
 
     public void setSedeLegale(IndirizzoSedeLegale sedeLegale) {
         this.sedeLegale = sedeLegale;
-    }
-
-    public List<IndirizzoSedeOperativa> getSediOperative() {
-        return sediOperative;
-    }
-
-    public void setSediOperative(List<IndirizzoSedeOperativa> sediOperative) {
-        this.sediOperative = sediOperative;
     }
 
     public long getId() {
