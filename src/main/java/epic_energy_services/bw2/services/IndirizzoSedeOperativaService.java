@@ -32,7 +32,7 @@ public class IndirizzoSedeOperativaService {
         Comune comune = comuneService.findById(dto.comuneId());
 
         IndirizzoSedeOperativa indirizzo = new IndirizzoSedeOperativa(
-                dto.via(), dto.civico(), dto.località(), dto.cap(), comune
+                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune
         );
         return repository.save(indirizzo);
     }
@@ -52,7 +52,7 @@ public class IndirizzoSedeOperativaService {
 
         found.setVia(newIndirizzoDTO.via());
         found.setCivico(newIndirizzoDTO.civico());
-        found.setLocalità(newIndirizzoDTO.località());
+        found.setLocalità(newIndirizzoDTO.localita());
         found.setCap(newIndirizzoDTO.cap());
         found.setComune(comune);
 

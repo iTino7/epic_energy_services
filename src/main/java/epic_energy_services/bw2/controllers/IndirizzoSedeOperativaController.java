@@ -2,6 +2,7 @@ package epic_energy_services.bw2.controllers;
 
 import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
 import epic_energy_services.bw2.exception.ValidationException;
+import epic_energy_services.bw2.payloads.NewIDRespDTO;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
 import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.services.IndirizzoSedeOperativaService;
@@ -30,27 +31,35 @@ public class IndirizzoSedeOperativaController {
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public IndirizzoSedeOperativa crea(@RequestBody NewIndirizzoDTO dto) {
-        return service.creaNuovaSedeOperativa(dto);
+    public NewIDRespDTO crea(@RequestBody @Validated NewIndirizzoDTO dto, BindingResult validation) {
+        if (validation.hasErrors()) {
+            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+        } else {
+            IndirizzoSedeOperativa newCreated = service.creaNuovaSedeOperativa(dto);
+            return new NewIDRespDTO(newCreated.getId());
+        }
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public List<IndirizzoSedeOperativa> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public IndirizzoSedeOperativa findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public IndirizzoSedeOperativa update(@PathVariable Long id, @RequestBody @Validated NewIndirizzoDTO newIndirizzoDTO, BindingResult validation) {
+    public NewIDRespDTO update(@PathVariable Long id, @RequestBody @Validated NewIndirizzoDTO newIndirizzoDTO, BindingResult validation) {
         if (validation.hasErrors()) {
             throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
         } else {
-            return service.update(id, newIndirizzoDTO);
+            IndirizzoSedeOperativa updated = service.update(id, newIndirizzoDTO);
+            return new NewIDRespDTO(updated.getId());
         }
     }
 
