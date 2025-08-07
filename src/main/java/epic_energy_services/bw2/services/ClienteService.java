@@ -1,15 +1,13 @@
 package epic_energy_services.bw2.services;
 
-import epic_energy_services.bw2.entities.Cliente;
-import epic_energy_services.bw2.entities.Comune;
-import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
-import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
+import epic_energy_services.bw2.entities.*;
 import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.exception.NotFoundException;
 import epic_energy_services.bw2.payloads.NewClienteDTO;
 import epic_energy_services.bw2.repositories.ClienteRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeOperativaRepository;
+import jakarta.persistence.criteria.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -122,9 +120,6 @@ public class ClienteService {
 
         if (pageSize > 20) pageSize = 20;
 
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(sortBy));
-
-
         if (fatturatoAnnuale != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("fatturatoAnnuale"), fatturatoAnnuale));
         }
@@ -139,6 +134,23 @@ public class ClienteService {
 
         if (partialName != null) {
             spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("nomeContatto")), "%" + partialName.toLowerCase() + "%"));
+        }
+        Pageable pageable;
+
+        if (sortBy.equalsIgnoreCase("provincia")){
+            pageable = PageRequest.of(pageNum,pageSize);
+
+            spec = spec.and((root, query, cb) -> {
+                Join<Cliente, IndirizzoSedeLegale> clienteSedeLegaleJoin = root.join("sedeLegale");
+                Join<IndirizzoSedeLegale, Comune> sedeLegaleComuneJoin = clienteSedeLegaleJoin.join("comune");
+                Join<Comune, Provincia> comuneProvinciaJoin = sedeLegaleComuneJoin.join("provincia");
+
+                query.orderBy(cb.asc(comuneProvinciaJoin.get("provincia")));
+
+                return cb.conjunction();
+            });
+        } else {
+            pageable = PageRequest.of(pageNum, pageSize, Sort.by(sortBy));
         }
 
         return this.clienteRepository.findAll(spec, pageable);

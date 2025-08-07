@@ -50,9 +50,10 @@ public class FatturaService {
         if (foundByNum.get().getId() != id){
             throw new BadRequestException("Numero fattura " + payload.numero() + " già esistente.");
         }
-        Fattura found = this.findById(id);
         
+        Fattura found = this.findById(id);
         Cliente cliente = this.clienteService.findById(payload.clienteId());
+
         StatoFattura stato = this.statoFatturaService.checkStato(payload.statoFattura());
         found.setData(payload.date());
         found.setImporto(payload.importo());
