@@ -21,8 +21,8 @@ public class IndirizzoSedeOperativaService {
     @Autowired
     private ComuneService comuneService;
 
-    @Autowired
-    private ClienteService clienteService;
+//    @Autowired
+//    private ClienteService clienteService;
 
     public List<IndirizzoSedeOperativa> findAll() {
         return repository.findAll();
@@ -56,17 +56,17 @@ public class IndirizzoSedeOperativaService {
         repository.deleteById(id);
     }
 
-    public IndirizzoSedeOperativa creaNuovaSedeOperativa(NewIndirizzoDTO dto) {
-        this.findByViaAndCivicoAndLocalita(dto.via(), dto.civico(), dto.localita());
-        Comune comune = comuneService.findById(dto.comuneId());
-        Cliente cliente = this.clienteService.findById(dto.clienteId());
-
-        IndirizzoSedeOperativa nuova = new IndirizzoSedeOperativa(
-                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune, cliente
-        );
-
-        return repository.save(nuova);
-    }
+//    public IndirizzoSedeOperativa creaNuovaSedeOperativa(NewIndirizzoDTO dto) {
+//        this.findByViaAndCivicoAndLocalita(dto.via(), dto.civico(), dto.localita());
+//        Comune comune = comuneService.findById(dto.comuneId());
+//        Cliente cliente = this.clienteService.findById(dto.clienteId());
+//
+//        IndirizzoSedeOperativa nuova = new IndirizzoSedeOperativa(
+//                dto.via(), dto.civico(), dto.localita(), dto.cap(), comune, cliente
+//        );
+//
+//        return repository.save(nuova);
+//    }
 
     public List<IndirizzoSedeOperativa> findByCap(String cap) {
         return repository.findByCap(cap);

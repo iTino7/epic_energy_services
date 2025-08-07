@@ -28,17 +28,17 @@ public class IndirizzoSedeOperativaController {
     @Autowired
     private ComuneRepository comuneRepository;
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public NewIDRespDTO crea(@RequestBody @Validated NewIndirizzoDTO dto, BindingResult validation) {
-        if (validation.hasErrors()) {
-            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
-        } else {
-            IndirizzoSedeOperativa newCreated = service.creaNuovaSedeOperativa(dto);
-            return new NewIDRespDTO(newCreated.getId());
-        }
-    }
+//    @PostMapping
+//    @PreAuthorize("hasAuthority('ADMIN')")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public NewIDRespDTO crea(@RequestBody @Validated NewIndirizzoDTO dto, BindingResult validation) {
+//        if (validation.hasErrors()) {
+//            throw new ValidationException(validation.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList());
+//        } else {
+//            IndirizzoSedeOperativa newCreated = service.creaNuovaSedeOperativa(dto);
+//            return new NewIDRespDTO(newCreated.getId());
+//        }
+//    }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
