@@ -136,7 +136,7 @@ public class ClienteService {
         }
 
         if (ultimoContatto != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("dataUltimoContratto"), ultimoContatto));
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("dataUltimoContatto"), ultimoContatto));
         }
 
         if (partialName != null) {
