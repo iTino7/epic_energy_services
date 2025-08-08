@@ -1,5 +1,6 @@
 package epic_energy_services.bw2.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "clienti")
+@JsonIgnoreProperties({"sedeOperativa"})
 public class Cliente {
 
     @Id
@@ -29,11 +31,13 @@ public class Cliente {
     private String logoAziendale;
     @OneToOne
     private IndirizzoSedeLegale sedeLegale;
+    @OneToOne
+    private IndirizzoSedeOperativa sedeOperativa;
 
     public Cliente() {
     }
 
-    public Cliente(String ragioneSociale, long partitaIva, String email, LocalDate dataInserimento, LocalDate dataUltimoContatto, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String nomeContatto, String cognomeContatto, String telefonoContatto, IndirizzoSedeLegale sedeLegale) {
+    public Cliente(String ragioneSociale, long partitaIva, String email, LocalDate dataInserimento, LocalDate dataUltimoContatto, double fatturatoAnnuale, String pec, String telefono, String emailContatto, String nomeContatto, String cognomeContatto, String telefonoContatto, IndirizzoSedeLegale sedeLegale, IndirizzoSedeOperativa sedeOperativa) {
         this.ragioneSociale = ragioneSociale;
         this.partitaIva = partitaIva;
         this.email = email;
@@ -48,6 +52,7 @@ public class Cliente {
         this.telefonoContatto = telefonoContatto;
         this.logoAziendale = "https://ui-avatars.com/api/?name=" + nomeContatto + "+" + cognomeContatto;
         this.sedeLegale = sedeLegale;
+        this.sedeOperativa = sedeOperativa;
     }
 
     public IndirizzoSedeLegale getSedeLegale() {
@@ -164,6 +169,14 @@ public class Cliente {
 
     public void setLogoAziendale(String logoAziendale) {
         this.logoAziendale = logoAziendale;
+    }
+
+    public IndirizzoSedeOperativa getSedeOperativa() {
+        return sedeOperativa;
+    }
+
+    public void setSedeOperativa(IndirizzoSedeOperativa sedeOperativa) {
+        this.sedeOperativa = sedeOperativa;
     }
 
     @Override

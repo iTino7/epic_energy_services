@@ -25,7 +25,7 @@ public class ClientiController {
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Page<Cliente> getAllClient(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(required = false) Double fatturatoAnnuale,
             @RequestParam(required = false) LocalDate dataInserimento,

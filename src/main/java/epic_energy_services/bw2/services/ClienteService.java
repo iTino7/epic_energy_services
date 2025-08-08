@@ -67,6 +67,8 @@ public class ClienteService {
         IndirizzoSedeLegale indirizzoSL = new IndirizzoSedeLegale(payload.viaSL(),payload.civicoSL(),payload.localitaSL(),payload.capSL(), comuneSL);
         IndirizzoSedeLegale newSL =  this.sedeLegaleRepository.save(indirizzoSL);
 
+        IndirizzoSedeOperativa indirizzoSO = new IndirizzoSedeOperativa(payload.viaSO(),payload.civicoSO(),payload.localitaSO(),payload.capSO(), comuneSO);
+        IndirizzoSedeOperativa newSO = this.sedeOperativaRepository.save(indirizzoSO);
 
         this.findByEmail(payload.email());
 
@@ -83,15 +85,15 @@ public class ClienteService {
                 payload.nomeContatto(),
                 payload.cognomeContatto(),
                 payload.telefonoContatto(),
-                newSL
+                newSL,
+                newSO
         );
         Cliente newCliente = this.clienteRepository.save(cliente);
 
         System.out.println("Località da salvare: " + payload.localitaSO());
 
 
-        IndirizzoSedeOperativa indirizzoSO = new IndirizzoSedeOperativa(payload.viaSO(),payload.civicoSO(),payload.localitaSO(),payload.capSO(), comuneSO, newCliente);
-        IndirizzoSedeOperativa newSO = this.sedeOperativaRepository.save(indirizzoSO);
+
 
         System.out.println("Dopo save, localita = " + newSO.getLocalita());
 

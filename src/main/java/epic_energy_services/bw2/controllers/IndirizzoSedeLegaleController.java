@@ -1,11 +1,13 @@
 package epic_energy_services.bw2.controllers;
 
 import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
+import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
 import epic_energy_services.bw2.exception.ValidationException;
 import epic_energy_services.bw2.payloads.NewIDRespDTO;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
 import epic_energy_services.bw2.services.IndirizzoSedeLegaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -22,9 +24,11 @@ public class IndirizzoSedeLegaleController {
     private IndirizzoSedeLegaleService service;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public List<IndirizzoSedeLegale> findAll() {
-        return service.findAll();
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public Page<IndirizzoSedeLegale> findAll(@RequestParam( defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "20") int size,
+                                                @RequestParam(defaultValue = "id") String sortBy){
+        return this.service.findAll(page, size, sortBy);
     }
 
     @GetMapping("/{id}")

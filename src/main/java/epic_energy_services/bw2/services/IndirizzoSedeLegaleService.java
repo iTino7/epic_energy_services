@@ -2,6 +2,7 @@ package epic_energy_services.bw2.services;
 
 import epic_energy_services.bw2.entities.Comune;
 import epic_energy_services.bw2.entities.IndirizzoSedeLegale;
+import epic_energy_services.bw2.entities.IndirizzoSedeOperativa;
 import epic_energy_services.bw2.exception.BadRequestException;
 import epic_energy_services.bw2.exception.NotFoundException;
 import epic_energy_services.bw2.payloads.NewIndirizzoDTO;
@@ -9,6 +10,10 @@ import epic_energy_services.bw2.repositories.ComuneRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +27,10 @@ public class IndirizzoSedeLegaleService {
     @Autowired
     private ComuneService comuneService;
 
-    public List<IndirizzoSedeLegale> findAll() {
-        return indirizzoRepository.findAll();
+    public Page<IndirizzoSedeLegale> findAll (int pageNum, int pageSize, String sortBy){
+        if (pageSize > 20) pageSize = 20;
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(sortBy));
+        return this.indirizzoRepository.findAll(pageable);
     }
 
     public IndirizzoSedeLegale findById(Long id) {
@@ -31,7 +38,7 @@ public class IndirizzoSedeLegaleService {
     }
 
     public void findByViaAndCivicoAndLocalita(String via, String civico, String localita) {
-        indirizzoRepository.findByViaAndCivicoAndLocalita(via, civico, localita).ifPresent(indirizzo  -> { throw new BadRequestException("Indirizzo in " + via  + " al civico " + civico + " esiste già.");});
+        indirizzoRepository.findByViaAndCivicoAndLocalita(via, civico, localita).ifPresent(indirizzo  -> { throw new BadRequestException("Indirizzo in " + via  + " al civico " + civico + " situato a " + localita + " esiste già.");});
     }
 
     public IndirizzoSedeLegale crea(NewIndirizzoDTO dto) {
