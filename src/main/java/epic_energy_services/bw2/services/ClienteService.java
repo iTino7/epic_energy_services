@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.IDN;
 import java.time.LocalDate;
@@ -161,8 +162,10 @@ public class ClienteService {
 
     }
 
-    public void sendEmailToCliente(long id){
-        mailSender.sendRegistrationEmail(this.findById(id));
+    public void sendEmailToCliente(long id, String type){
+        if (type.equals("saldo")) mailSender.sendNotificationEmail(this.findById(id));
+        else if (type.equals("natale")) mailSender.sendChristmasEmail(this.findById(id));
+        else mailSender.sendThanksEmail(this.findById(id));
     }
 
 

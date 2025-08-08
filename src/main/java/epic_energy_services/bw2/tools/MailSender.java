@@ -21,17 +21,41 @@ public class MailSender {
     }
 
 
-    public void sendRegistrationEmail(Cliente recipient) {
+    public void sendNotificationEmail(Cliente recipient) {
         HttpResponse<JsonNode> response = Unirest.post("https://api.mailgun.net/v3/" + this.domain + "/messages")
                 .basicAuth("api", this.apiKey)
-                .queryString("from", "postmaster@sandbox1234567890.mailgun.org")
+                .queryString("from", "epic_energy@gmail.com")
                 .queryString("to", "mhanzdnd@gmail.com")
-                .queryString("subject", "Registrazione completata!")
-                .queryString("text", "Benvenuto " + recipient.getNomeContatto() + " sulla nostra piattaforma!")
+                .queryString("subject", "Fatture da saldare!")
+                .queryString("text", "Caro " + recipient.getNomeContatto() + " " + recipient.getCognomeContatto() + ", " +
+                                "speriamo di farle cosa grata notificandole il mancato pagamento delle ultime fatture da lei inserite." +
+                        "Mhanz!")
                 .asJson();
         System.out.println(response.getBody());
     }
 
-    public void sendBillingEmail(){}
+    public void sendChristmasEmail(Cliente recipient){
+        HttpResponse<JsonNode> response = Unirest.post("https://api.mailgun.net/v3/" + this.domain + "/messages")
+                .basicAuth("api", this.apiKey)
+                .queryString("from", "epic_energy@gmail.com")
+                .queryString("to", "mhanzdnd@gmail.com")
+                .queryString("subject", "It's Tiiiiime!")
+                .queryString("text", "Caro " + recipient.getNomeContatto() + ", auguri di Buon Natale! " +
+                        "Da tutto il team di epic-service <3" )
+                .asJson();
+        System.out.println(response.getBody());
+    }
+
+    public void sendThanksEmail(Cliente recipient) {
+        HttpResponse<JsonNode> response = Unirest.post("https://api.mailgun.net/v3/" + this.domain + "/messages")
+                .basicAuth("api", this.apiKey)
+                .queryString("from", "epic_energy@gmail.com")
+                .queryString("to", "mhanzdnd@gmail.com")
+                .queryString("subject", "Grazie!")
+                .queryString("text", "Caro " + recipient.getNomeContatto() + ", grazie di essere ancora nostro cliente.")
+                .asJson();
+        System.out.println(response.getBody());
+    }
+
 
 }
