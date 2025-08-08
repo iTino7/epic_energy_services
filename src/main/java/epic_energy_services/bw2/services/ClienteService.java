@@ -7,6 +7,7 @@ import epic_energy_services.bw2.payloads.NewClienteDTO;
 import epic_energy_services.bw2.repositories.ClienteRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeLegaleRepository;
 import epic_energy_services.bw2.repositories.IndirizzoSedeOperativaRepository;
+import epic_energy_services.bw2.tools.MailSender;
 import jakarta.persistence.criteria.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.net.IDN;
 import java.time.LocalDate;
@@ -41,6 +43,9 @@ public class ClienteService {
 
     @Autowired
     private ComuneService comuneService;
+
+    @Autowired
+    private MailSender mailSender;
 
     public Cliente findById(long id) {
         return this.clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente con questo id " + id + " non trovato"));
@@ -155,6 +160,12 @@ public class ClienteService {
 
         return this.clienteRepository.findAll(spec, pageable);
 
+    }
+
+    public void sendEmailToCliente(long id, String type){
+        if (type.equals("saldo")) mailSender.sendNotificationEmail(this.findById(id));
+        else if (type.equals("natale")) mailSender.sendChristmasEmail(this.findById(id));
+        else mailSender.sendThanksEmail(this.findById(id));
     }
 
 

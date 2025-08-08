@@ -66,4 +66,11 @@ public class ClientiController {
     public void deleteClient(@PathVariable long id) {
         this.clienteService.deleteClient(id);
     }
+
+    @PostMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void sendEmail(@PathVariable long id,
+                          @RequestParam(defaultValue = "saldo") String type) {
+       this.clienteService.sendEmailToCliente(id, type);
+    }
 }
